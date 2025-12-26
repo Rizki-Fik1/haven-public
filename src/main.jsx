@@ -6,8 +6,8 @@ import App from './App.jsx'
 import Homepage from './pages/Homepage.jsx'
 import SearchPage from './pages/SearchPage.jsx'
 import ShopPage from './pages/shop/ShopPage.jsx'
-import ArticlePage from './pages/Ariticle/ArticlePage.jsx'
-import ArticleDetail from './pages/Ariticle/ArticleDetail.jsx'
+import ArticlePage from './pages/ariticle/ArticlePage.jsx'
+import ArticleDetail from './pages/ariticle/ArticleDetail.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
