@@ -75,7 +75,7 @@ const Footer = () => {
           <div className="footer-brand">
             <svg width="100" height="40" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <text x="0" y="30" fill="#4F46E5" fontSize="28" fontWeight="600" fontFamily="Arial, sans-serif">
-                cove
+                Haven
               </text>
             </svg>
             <p className="footer-tagline">

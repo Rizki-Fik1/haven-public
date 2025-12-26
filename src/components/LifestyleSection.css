@@ -1,0 +1,172 @@
+.lifestyle-section-new {
+  width: 100%;
+  background-color: #fff9f2;
+  padding: 48px 16px;
+}
+
+.lifestyle-container-new {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Location Cards Grid */
+.location-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+  order: 2;
+}
+
+.location-card {
+  background-color: #fff2e0;
+  border-radius: 16px;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.location-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.location-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 280px;
+  margin: 0 auto 16px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.location-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.location-card:hover .location-image {
+  transform: scale(1.05);
+}
+
+.location-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+/* Heading Wrapper */
+.lifestyle-heading-wrapper {
+  text-align: center;
+  order: 1;
+}
+
+.lifestyle-heading-new {
+  font-size: 28px;
+  line-height: 1.3;
+  margin: 0 0 8px 0;
+}
+
+.heading-light {
+  font-weight: 300;
+  color: #4b5563;
+}
+
+.heading-normal {
+  font-weight: 400;
+  color: #4b5563;
+}
+
+.lifestyle-subheading-new {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1f2937;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Large screens: 12 column grid - 10 cols for cards, 2 cols for text */
+@media (min-width: 1024px) {
+  .lifestyle-container-new {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 48px;
+  }
+
+  /* Cards take 10 columns on the LEFT */
+  .location-cards-grid {
+    grid-column: span 10;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    order: 1;
+  }
+
+  /* Heading takes 2 columns on the RIGHT */
+  .lifestyle-heading-wrapper {
+    grid-column: span 2;
+    text-align: left;
+    order: 2;
+  }
+
+  .lifestyle-heading-new {
+    font-size: 36px;
+  }
+
+  .lifestyle-subheading-new {
+    font-size: 40px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .location-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lifestyle-heading-new {
+    font-size: 32px;
+  }
+
+  .lifestyle-subheading-new {
+    font-size: 36px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 639px) {
+  .lifestyle-section-new {
+    padding: 48px 16px;
+  }
+
+  .location-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .location-card {
+    padding: 20px 12px;
+  }
+
+  .location-image-wrapper {
+    margin-bottom: 12px;
+  }
+
+  .location-name {
+    font-size: 14px;
+  }
+
+  .lifestyle-heading-new {
+    font-size: 24px;
+  }
+
+  .lifestyle-subheading-new {
+    font-size: 28px;
+  }
+}

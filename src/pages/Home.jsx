@@ -2,14 +2,12 @@ import React from 'react';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import SearchBar from '../components/SearchBar';
-import FeaturedHomes from '../components/FeaturedHomes';
-import LocationsSection from '../components/LocationsSection';
-import PricingSection from '../components/PricingSection';
-import CommunitySection from '../components/CommunitySection';
-import BenefitsSection from '../components/BenefitsSection';
-import GallerySection from '../components/GallerySection';
-import TestimonialsSection from '../components/TestimonialsSection';
-import StatsSection from '../components/StatsSection';
+import CommunityFeatures from '../components/CommunityFeatures';
+import FeaturedProperties from '../components/FeaturedProperties';
+import PropertyListings from '../components/PropertyListings';
+import LifestyleSection from '../components/LifestyleSection';
+import ArticleSection from '../components/ArticleSection';
+import ServiceSection from '../components/ServiceSection';
 import Footer from '../components/Footer';
 import './Home.css';
 
@@ -20,14 +18,12 @@ const Home = () => {
       <main className="home-main">
         <HeroSection />
         <SearchBar />
-        <FeaturedHomes />
-        <LocationsSection />
-        <PricingSection />
-        <CommunitySection />
-        <BenefitsSection />
-        <GallerySection />
-        <TestimonialsSection />
-        <StatsSection />
+        <CommunityFeatures />
+        <FeaturedProperties />
+        <PropertyListings />
+        <LifestyleSection />
+        <ArticleSection />
+        <ServiceSection />
       </main>
       <Footer />
     </div>
