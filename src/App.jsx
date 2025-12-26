@@ -1,11 +1,14 @@
-import React from 'react';
-import Home from './pages/Home';
-import './App.css';
+import { Outlet } from 'react-router-dom';
+import { Header, Footer } from './components/layout';
 
 function App() {
   return (
-    <div className="App">
-      <Home />
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }

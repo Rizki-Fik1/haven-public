@@ -1,6 +1,3 @@
-import React from 'react';
-import './GallerySection.css';
-
 const GallerySection = () => {
   const galleryImages = [
     { id: 1, src: '/images/gallery-1.jpg', alt: 'Modern living room', large: true },

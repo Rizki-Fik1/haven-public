@@ -1,6 +1,3 @@
-import React from 'react';
-import './CommunitySection.css';
-
 const CommunitySection = () => {
   const handleJoinCommunity = () => {
     console.log('Join community clicked');

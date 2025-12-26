@@ -1,6 +1,3 @@
-import React from 'react';
-import './FeaturedHomes.css';
-
 const FeaturedHomes = () => {
   const homes = [
     {

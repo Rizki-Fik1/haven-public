@@ -1,6 +1,3 @@
-import React from 'react';
-import './LocationsSection.css';
-
 const LocationsSection = () => {
   const locations = [
     {

@@ -1,6 +1,3 @@
-import React from 'react';
-import './PricingSection.css';
-
 const PricingSection = () => {
   const plans = [
     {

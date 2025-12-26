@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import './TestimonialsSection.css';
+import { useState } from 'react';
 
 const TestimonialsSection = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);

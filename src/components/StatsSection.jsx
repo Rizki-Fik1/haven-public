@@ -1,6 +1,3 @@
-import React from 'react';
-import './StatsSection.css';
-
 const StatsSection = () => {
   const stats = [
     {
