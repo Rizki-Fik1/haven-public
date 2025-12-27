@@ -78,8 +78,12 @@ const Header = () => {
             </button>
 
             <button 
-              className="bg-transparent border-none text-[15px] font-medium py-2.5 px-4 xl:px-5 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-              onClick={handleDisabledNav}
+              className={`bg-transparent border-none text-[15px] font-medium py-2.5 px-4 xl:px-5 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap ${
+                isActive('/search') 
+                  ? 'bg-indigo-50 text-indigo-600' 
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+              }`}
+              onClick={() => handleNavigation("/search")}
             >
               Cari
             </button>
@@ -201,8 +205,12 @@ const Header = () => {
                 Home
               </button>
               <button
-                className="text-left px-4 py-3 rounded-lg font-medium transition-colors text-gray-700 hover:bg-gray-100"
-                onClick={handleDisabledNav}
+                className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${
+                  isActive('/search') 
+                    ? 'bg-indigo-50 text-indigo-600' 
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                onClick={() => handleNavigation("/search")}
               >
                 Cari
               </button>
