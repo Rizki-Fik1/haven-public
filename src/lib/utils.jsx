@@ -10,10 +10,13 @@ export const getImageUrl = (url) => {
     return "/placeholder.jpg";
   }
 
-  if (!url.startsWith("http")) {
+  // Convert to string if it's not already
+  const urlString = typeof url === 'string' ? url : String(url);
+
+  if (!urlString.startsWith("http")) {
     return `${
       import.meta.env.VITE_APP_URL || "http://localhost:8000"
-    }/${url}`;
+    }/${urlString}`;
   }
-  return url;
+  return urlString;
 };

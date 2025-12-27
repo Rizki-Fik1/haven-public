@@ -106,9 +106,7 @@ const PropertyListings = () => {
         { icon: '👔', label: 'professionals' },
         { icon: '🚹', label: 'male only' },
         { icon: '🏠', label: 'kost' }
-      ],
-      originalPrice: 1900000,
-      price: 1500000
+      ]
     },
     {
       id: 2,
@@ -122,9 +120,7 @@ const PropertyListings = () => {
         { icon: '🚆', label: '9 mins to bus' },
         { icon: '📶', label: 'shariah' },
         { icon: '👨‍🎓', label: 'students' }
-      ],
-      originalPrice: 1900000,
-      price: 1700000
+      ]
     },
     {
       id: 3,
@@ -138,9 +134,7 @@ const PropertyListings = () => {
         { icon: '🚆', label: '5 mins to bus' },
         { icon: '🏢', label: 'umb' },
         { icon: '👔', label: 'professionals' }
-      ],
-      originalPrice: 2000000,
-      price: 1700000
+      ]
     }
   ];
 

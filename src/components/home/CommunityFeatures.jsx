@@ -1,3 +1,5 @@
+import communityImage from '../../assets/images/image.png';
+
 const CommunityFeatures = () => {
   const features = [
     { icon: '/icons/sofa.svg', label: 'fully furnished' },
