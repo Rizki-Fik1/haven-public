@@ -1,45 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getKosList } from '../../services/kosService';
+import ErrorAlert from '../ui/ErrorAlert';
 
 const FeaturedProperties = () => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [numVisible, setNumVisible] = useState(1);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Fallback dummy data
-  const fallbackProperties = [
-    {
-      id: 1,
-      name: 'Modern Living Space',
-      image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop'
-    },
-    {
-      id: 2,
-      name: 'Cozy Urban Studio',
-      image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop'
-    },
-    {
-      id: 3,
-      name: 'Bright City Room',
-      image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600&h=400&fit=crop'
-    },
-    {
-      id: 4,
-      name: 'Stylish Co-Living',
-      image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop'
-    },
-    {
-      id: 5,
-      name: 'Premium Suite',
-      image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop'
-    },
-    {
-      id: 6,
-      name: 'Downtown Apartment',
-      image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&h=400&fit=crop'
-    }
-  ];
+  const [error, setError] = useState(null);
 
   // Fetch kos data from API
   useEffect(() => {
@@ -51,7 +21,7 @@ const FeaturedProperties = () => {
         // Transform API data
         const transformedData = (response.data || []).map(kos => {
           // Get image URL
-          let imageUrl = fallbackProperties[0].image;
+          let imageUrl = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop';
           if (kos.image && Array.isArray(kos.image) && kos.image.length > 0) {
             const img = kos.image[0];
             if (typeof img === 'object' && img.url) {
@@ -73,11 +43,11 @@ const FeaturedProperties = () => {
         });
         
         setProperties(transformedData);
+        setError(null);
       } catch (err) {
-        if (!err.isNotFound) {
-          console.error('Failed to fetch kos:', err);
-        }
-        setProperties(fallbackProperties);
+        console.error('Failed to fetch kos:', err);
+        setError('Gagal memuat properti. Silakan coba lagi.');
+        setProperties([]);
       } finally {
         setLoading(false);
       }
@@ -122,6 +92,11 @@ const FeaturedProperties = () => {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
 
+  const handlePropertyClick = (property) => {
+    // Navigate to kos detail page
+    navigate(`/getKos/${property.id}`);
+  };
+
   // Calculate transform based on screen size
   const isMobile = numVisible === 1;
   const itemWidth = 300;
@@ -138,6 +113,24 @@ const FeaturedProperties = () => {
         </div>
       </section>
     );
+  }
+
+  if (error) {
+    return (
+      <section className="w-full bg-[#FFF8F0] py-12 md:py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <ErrorAlert 
+            message={error}
+            onRetry={() => window.location.reload()}
+            type="error"
+          />
+        </div>
+      </section>
+    );
+  }
+
+  if (properties.length === 0) {
+    return null;
   }
 
   return (
@@ -161,15 +154,19 @@ const FeaturedProperties = () => {
               }}
             >
               {properties.map((property) => (
-                <div key={property.id} className="flex-shrink-0 w-full md:w-[300px]">
-                  <div className="rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+                <div 
+                  key={property.id} 
+                  className="flex-shrink-0 w-full md:w-[300px] cursor-pointer"
+                  onClick={() => handlePropertyClick(property)}
+                >
+                  <div className="rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-shadow">
                     <img
                       src={property.image}
                       alt={property.name}
                       className="w-full h-[200px] object-cover block"
                     />
                   </div>
-                  <h3 className="mt-3 px-0 md:px-0 text-base font-semibold text-gray-900">{property.name}</h3>
+                  <h3 className="mt-3 px-0 md:px-0 text-base font-semibold text-gray-900 hover:text-indigo-600 transition-colors">{property.name}</h3>
                 </div>
               ))}
             </div>

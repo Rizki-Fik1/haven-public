@@ -1,63 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLatestArticles } from '../../services/articleService';
+import ErrorAlert from '../ui/ErrorAlert';
 
 const ArticleSection = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Fallback dummy data
-  const fallbackArticles = [
-    {
-      id: 1,
-      judul: 'Tips Memilih Kos yang Tepat untuk Mahasiswa',
-      thumbnail: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=500&fit=crop',
-      isi: '<p>Memilih kos yang tepat sangat penting untuk kenyamanan selama kuliah. Berikut beberapa tips yang perlu diperhatikan...</p>',
-      status: 'published',
-      created_at: '2024-12-20T10:00:00'
-    },
-    {
-      id: 2,
-      judul: 'Panduan Lengkap Co-Living untuk Profesional Muda',
-      thumbnail: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop',
-      isi: '<p>Co-living menjadi solusi hunian modern yang cocok untuk profesional muda. Simak panduan lengkapnya di sini...</p>',
-      status: 'published',
-      created_at: '2024-12-18T14:30:00'
-    },
-    {
-      id: 3,
-      judul: '5 Keuntungan Tinggal di Kos Dekat Kampus',
-      thumbnail: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&h=500&fit=crop',
-      isi: '<p>Tinggal dekat kampus memberikan banyak keuntungan, mulai dari hemat waktu hingga hemat biaya transportasi...</p>',
-      status: 'published',
-      created_at: '2024-12-15T09:15:00'
-    },
-    {
-      id: 4,
-      judul: 'Cara Menghemat Biaya Kos Bulanan',
-      thumbnail: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=500&fit=crop',
-      isi: '<p>Menghemat biaya kos bulanan bisa dilakukan dengan beberapa trik sederhana. Yuk simak tipsnya...</p>',
-      status: 'published',
-      created_at: '2024-12-12T16:45:00'
-    },
-    {
-      id: 5,
-      judul: 'Tren Hunian Co-Living di Indonesia 2024',
-      thumbnail: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=500&fit=crop',
-      isi: '<p>Industri co-living di Indonesia terus berkembang. Berikut tren terbaru yang perlu Anda ketahui...</p>',
-      status: 'published',
-      created_at: '2024-12-10T11:20:00'
-    },
-    {
-      id: 6,
-      judul: 'Fasilitas Wajib yang Harus Ada di Kos Modern',
-      thumbnail: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&h=500&fit=crop',
-      isi: '<p>Kos modern harus dilengkapi dengan berbagai fasilitas untuk kenyamanan penghuninya. Ini dia daftar lengkapnya...</p>',
-      status: 'published',
-      created_at: '2024-12-08T13:00:00'
-    }
-  ];
+  const [error, setError] = useState(null);
 
   // Fetch articles from API
   useEffect(() => {
@@ -69,7 +19,7 @@ const ArticleSection = () => {
         // Transform API data
         const transformedData = (response.data || []).map(article => {
           // Handle thumbnail URL
-          let thumbnailUrl = fallbackArticles[0].thumbnail;
+          let thumbnailUrl = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=500&fit=crop';
           if (article.thumbnail) {
             thumbnailUrl = article.thumbnail.startsWith('http')
               ? article.thumbnail
@@ -87,11 +37,11 @@ const ArticleSection = () => {
         });
         
         setArticles(transformedData);
+        setError(null);
       } catch (err) {
-        if (!err.isNotFound) {
-          console.error('Failed to fetch articles:', err);
-        }
-        setArticles(fallbackArticles);
+        console.error('Failed to fetch articles:', err);
+        setError('Gagal memuat artikel. Silakan coba lagi.');
+        setArticles([]);
       } finally {
         setLoading(false);
       }
@@ -136,7 +86,23 @@ const ArticleSection = () => {
           </div>
         )}
 
-        {!loading && (
+        {error && !loading && (
+          <div className="mb-8">
+            <ErrorAlert 
+              message={error}
+              onRetry={() => window.location.reload()}
+              type="error"
+            />
+          </div>
+        )}
+
+        {!loading && !error && articles.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500">Belum ada artikel tersedia</p>
+          </div>
+        )}
+
+        {!loading && !error && articles.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.slice(0, 6).map((article) => (
             <div

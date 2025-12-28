@@ -1,58 +1,25 @@
 import { useState, useEffect } from 'react';
-import { getProducts, addToCart } from '../../services/productService';
+import { useNavigate } from 'react-router-dom';
+import { ShoppingCart, Check } from 'lucide-react';
+import { getProducts } from '../../services/productService';
 import { getImageUrl } from '../../lib/utils';
+import { addToCart, getCartItems } from '../../lib/cartUtils';
+import Toast from '../../components/ui/Toast';
+import ConfirmModal from '../../components/ui/ConfirmModal';
+import ErrorAlert from '../../components/ui/ErrorAlert';
 
 const ShopPage = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [addingToCart, setAddingToCart] = useState(null);
-
-  const fallbackProducts = [
-    {
-      id_produk: 1,
-      judul_produk: 'Kasur Lipat Premium',
-      harga: '450000',
-      id_kategori: 1,
-      gambar: [{ url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&h=300&fit=crop' }]
-    },
-    {
-      id_produk: 2,
-      judul_produk: 'Lemari Portable 2 Pintu',
-      harga: '350000',
-      id_kategori: 1,
-      gambar: [{ url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop' }]
-    },
-    {
-      id_produk: 3,
-      judul_produk: 'Meja Belajar Minimalis',
-      harga: '280000',
-      id_kategori: 1,
-      gambar: [{ url: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400&h=300&fit=crop' }]
-    },
-    {
-      id_produk: 4,
-      judul_produk: 'Lampu Meja LED',
-      harga: '85000',
-      id_kategori: 2,
-      gambar: [{ url: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=300&fit=crop' }]
-    },
-    {
-      id_produk: 5,
-      judul_produk: 'Kipas Angin Mini USB',
-      harga: '65000',
-      id_kategori: 2,
-      gambar: [{ url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop' }]
-    },
-    {
-      id_produk: 6,
-      judul_produk: 'Rak Buku Dinding',
-      harga: '120000',
-      id_kategori: 1,
-      gambar: [{ url: 'https://images.unsplash.com/photo-1594620302200-9a762244a156?w=400&h=300&fit=crop' }]
-    }
-  ];
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [cartItems, setCartItems] = useState([]);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const categories = [
     { id: 'all', name: 'Semua Produk' },
@@ -64,7 +31,13 @@ const ShopPage = () => {
 
   useEffect(() => {
     fetchProducts();
+    updateCartItems();
   }, [selectedCategory]);
+
+  const updateCartItems = () => {
+    const items = getCartItems();
+    setCartItems(items);
+  };
 
   const fetchProducts = async () => {
     try {
@@ -74,25 +47,44 @@ const ShopPage = () => {
       setProducts(data.data || data || []);
       setError(null);
     } catch (err) {
-      if (err.message !== 'API_NOT_FOUND') {
-        setError('Gagal memuat produk');
-      }
-      setProducts(fallbackProducts);
+      console.error('Failed to fetch products:', err);
+      setError('Gagal memuat produk. Silakan coba lagi.');
+      setProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddToCart = async (productId) => {
+  const handleAddToCart = (product) => {
     try {
-      setAddingToCart(productId);
-      await addToCart(productId, 1);
-      alert('Produk berhasil ditambahkan ke keranjang!');
+      setAddingToCart(product.id_produk);
+      
+      // Add to localStorage cart
+      addToCart(product, 1);
+      
+      // Update local cart items state
+      updateCartItems();
+      
+      // Dispatch custom event to update cart count in header
+      window.dispatchEvent(new Event('cartUpdated'));
+      
+      // Show toast notification
+      setToastMessage(`${product.judul_produk} ditambahkan ke keranjang`);
+      setShowToast(true);
     } catch (err) {
-      alert('Gagal menambahkan ke keranjang. Silakan coba lagi.');
+      setErrorMessage('Gagal menambahkan ke keranjang. Silakan coba lagi.');
+      setShowErrorModal(true);
     } finally {
       setAddingToCart(null);
     }
+  };
+
+  const isInCart = (productId) => {
+    return cartItems.some(item => item.id_produk === productId);
+  };
+
+  const handleViewCart = () => {
+    navigate('/cart');
   };
 
   const getProductImage = (product) => {
@@ -129,6 +121,26 @@ const ShopPage = () => {
 
   return (
     <div className="w-full bg-gray-50 min-h-screen py-8">
+      {/* Toast Notification */}
+      {showToast && (
+        <Toast 
+          message={toastMessage} 
+          onClose={() => setShowToast(false)} 
+        />
+      )}
+
+      {/* Error Modal */}
+      <ConfirmModal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        onConfirm={() => setShowErrorModal(false)}
+        title="Gagal Menambahkan"
+        message={errorMessage}
+        confirmText="OK"
+        cancelText=""
+        type="danger"
+      />
+      
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
@@ -138,8 +150,12 @@ const ShopPage = () => {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6">
-            <p className="text-sm">Menggunakan data contoh (API tidak tersedia)</p>
+          <div className="mb-6">
+            <ErrorAlert 
+              message={error}
+              onRetry={fetchProducts}
+              type="error"
+            />
           </div>
         )}
 
@@ -205,19 +221,39 @@ const ShopPage = () => {
                           {product.deskripsi}
                         </p>
                       )}
-                      <div className="flex items-center justify-between mt-4">
-                        <div>
-                          <span className="text-xl font-bold text-indigo-600">
-                            Rp {parseInt(product.harga).toLocaleString('id-ID')}
-                          </span>
+                      
+                      <div className="flex flex-col gap-3 mt-4">
+                        <div className="text-xl font-bold text-gray-900">
+                          Rp {parseInt(product.harga).toLocaleString('id-ID')}
                         </div>
-                        <button 
-                          onClick={() => handleAddToCart(product.id_produk)}
-                          disabled={addingToCart === product.id_produk}
-                          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-                        >
-                          {addingToCart === product.id_produk ? 'Menambah...' : 'Beli'}
-                        </button>
+                        
+                        {isInCart(product.id_produk) ? (
+                          <button 
+                            onClick={handleViewCart}
+                            className="w-full bg-green-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                          >
+                            <Check className="w-4 h-4" />
+                            Lihat Keranjang
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => handleAddToCart(product)}
+                            disabled={addingToCart === product.id_produk}
+                            className="w-full bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                          >
+                            {addingToCart === product.id_produk ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                Menambahkan...
+                              </>
+                            ) : (
+                              <>
+                                <ShoppingCart className="w-4 h-4" />
+                                Tambah Keranjang
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

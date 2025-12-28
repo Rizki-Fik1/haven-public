@@ -1,63 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getArticles } from '../../services/articleService';
+import ErrorAlert from '../../components/ui/ErrorAlert';
 
 const ArticlePage = () => {
   const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const fallbackArticles = [
-    {
-      id: 1,
-      judul: 'Tips Memilih Kos yang Tepat untuk Mahasiswa',
-      isi: '<p>Memilih kos yang tepat sangat penting untuk kenyamanan selama kuliah...</p>',
-      thumbnail: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop',
-      created_at: '2024-12-26T10:00:00',
-      status: 'published'
-    },
-    {
-      id: 2,
-      judul: 'Panduan Lengkap Co-Living untuk Profesional Muda',
-      isi: '<p>Co-living menjadi solusi hunian modern yang cocok untuk profesional muda...</p>',
-      thumbnail: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop',
-      created_at: '2024-12-25T14:30:00',
-      status: 'published'
-    },
-    {
-      id: 3,
-      judul: '5 Keuntungan Tinggal di Kos Dekat Kampus',
-      isi: '<p>Tinggal dekat kampus memberikan banyak keuntungan, mulai dari hemat waktu...</p>',
-      thumbnail: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=300&fit=crop',
-      created_at: '2024-12-24T09:15:00',
-      status: 'published'
-    },
-    {
-      id: 4,
-      judul: 'Cara Menghemat Biaya Kos Bulanan',
-      isi: '<p>Menghemat biaya kos bulanan bisa dilakukan dengan beberapa trik sederhana...</p>',
-      thumbnail: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&h=300&fit=crop',
-      created_at: '2024-12-23T16:45:00',
-      status: 'published'
-    },
-    {
-      id: 5,
-      judul: 'Tren Hunian Co-Living di Indonesia 2024',
-      isi: '<p>Industri co-living di Indonesia terus berkembang dengan berbagai inovasi...</p>',
-      thumbnail: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=300&fit=crop',
-      created_at: '2024-12-22T11:20:00',
-      status: 'published'
-    },
-    {
-      id: 6,
-      judul: 'Fasilitas Wajib yang Harus Ada di Kos Modern',
-      isi: '<p>Kos modern harus dilengkapi dengan berbagai fasilitas untuk kenyamanan...</p>',
-      thumbnail: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400&h=300&fit=crop',
-      created_at: '2024-12-21T13:00:00',
-      status: 'published'
-    }
-  ];
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -67,7 +17,7 @@ const ArticlePage = () => {
         
         // Transform API data
         const transformedData = (response.data || []).map(article => {
-          let thumbnailUrl = fallbackArticles[0].thumbnail;
+          let thumbnailUrl = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop';
           if (article.thumbnail) {
             thumbnailUrl = article.thumbnail.startsWith('http')
               ? article.thumbnail
@@ -87,11 +37,9 @@ const ArticlePage = () => {
         setArticles(transformedData);
         setError(null);
       } catch (err) {
-        if (!err.isNotFound) {
-          console.error('Failed to fetch articles:', err);
-        }
-        setError('API belum tersedia');
-        setArticles(fallbackArticles);
+        console.error('Failed to fetch articles:', err);
+        setError('Gagal memuat artikel. Silakan coba lagi.');
+        setArticles([]);
       } finally {
         setLoading(false);
       }
@@ -135,12 +83,22 @@ const ArticlePage = () => {
         )}
 
         {error && !loading && (
-          <div className="text-center py-4 text-gray-500 mb-6">
-            <p>Menggunakan data contoh (API tidak tersedia)</p>
+          <div className="mb-8">
+            <ErrorAlert 
+              message={error}
+              onRetry={() => window.location.reload()}
+              type="error"
+            />
           </div>
         )}
 
-        {!loading && (
+        {!loading && articles.length === 0 && !error && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">Belum ada artikel tersedia</p>
+          </div>
+        )}
+
+        {!loading && articles.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {articles.map((article) => (
             <div

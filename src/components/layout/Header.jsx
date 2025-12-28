@@ -1,11 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { getCartItemCount } from "../../lib/cartUtils";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [cartItemCount] = useState(0);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [cartBounce, setCartBounce] = useState(false);
+
+  // Update cart count on mount and when location changes
+  useEffect(() => {
+    updateCartCount();
+  }, [location]);
+
+  // Listen for cart updates
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      updateCartCount();
+      // Trigger bounce animation
+      setCartBounce(true);
+      setTimeout(() => setCartBounce(false), 500);
+    };
+
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+  }, []);
+
+  const updateCartCount = () => {
+    const count = getCartItemCount();
+    setCartItemCount(count);
+  };
 
   const handleLogoClick = () => {
     navigate("/");
@@ -18,7 +43,7 @@ const Header = () => {
   };
 
   const handleCart = () => {
-    console.log("Cart clicked");
+    navigate("/cart");
     setIsMobileMenuOpen(false);
   };
 
@@ -107,7 +132,7 @@ const Header = () => {
 
             {/* Cart Icon */}
             <button
-              className="relative bg-transparent border-none text-gray-700 p-2.5 cursor-pointer rounded-full transition-all duration-200 hover:bg-gray-100"
+              className={`relative bg-transparent border-none text-gray-700 p-2.5 cursor-pointer rounded-full transition-all duration-200 hover:bg-gray-100 ${cartBounce ? 'animate-bounce-scale' : ''}`}
               onClick={handleCart}
               aria-label="Shopping Cart"
             >
@@ -126,7 +151,7 @@ const Header = () => {
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-in zoom-in duration-200">
                   {cartItemCount}
                 </span>
               )}
@@ -145,7 +170,7 @@ const Header = () => {
           <div className="flex lg:hidden items-center gap-2">
             {/* Cart Icon Mobile */}
             <button
-              className="relative p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              className={`relative p-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors ${cartBounce ? 'animate-bounce-scale' : ''}`}
               onClick={handleCart}
               aria-label="Shopping Cart"
             >
@@ -164,7 +189,7 @@ const Header = () => {
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
               {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-in zoom-in duration-200">
                   {cartItemCount}
                 </span>
               )}

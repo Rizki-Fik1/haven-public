@@ -1,33 +1,89 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getLocations } from '../../services/locationService';
+import ErrorAlert from '../ui/ErrorAlert';
+
 const LifestyleSection = () => {
-  // Data lokasi - nanti bisa diganti dengan API call
-  const locations = [
-    {
-      id: 1,
-      nama: 'Jakarta Selatan',
-      image: 'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&h=400&fit=crop'
-    },
-    {
-      id: 2,
-      nama: 'Bandung',
-      image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=400&h=400&fit=crop'
-    },
-    {
-      id: 3,
-      nama: 'Tangerang',
-      image: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=400&h=400&fit=crop'
-    },
-    {
-      id: 4,
-      nama: 'Bekasi',
-      image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=400&fit=crop'
-    }
+  const navigate = useNavigate();
+  const [locations, setLocations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  // Placeholder images for locations
+  const placeholderImages = [
+    'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=400&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1449844908441-8829872d2607?w=400&h=400&fit=crop',
+    'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=400&h=400&fit=crop'
   ];
 
+  // Fetch locations from API
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        setLoading(true);
+        const response = await getLocations();
+        const locationData = Array.isArray(response.data) 
+          ? response.data 
+          : response.data?.data || response;
+        
+        if (Array.isArray(locationData) && locationData.length > 0) {
+          // Transform API data and add placeholder images
+          const transformedData = locationData.slice(0, 4).map((loc, index) => ({
+            id: loc.id,
+            nama: loc.nama,
+            image: placeholderImages[index] || placeholderImages[0]
+          }));
+          setLocations(transformedData);
+          setError(null);
+        } else {
+          setError('Tidak ada lokasi tersedia');
+          setLocations([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch locations:', err);
+        setError('Gagal memuat lokasi. Silakan coba lagi.');
+        setLocations([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
   const handleCardClick = (location) => {
-    console.log('Navigate to:', location.nama);
-    // TODO: Add navigation to city page
-    // navigate(`/city?daerah=${encodeURIComponent(location.nama)}`);
+    // Navigate to search page with city filter
+    navigate(`/search?city=${encodeURIComponent(location.nama)}`);
   };
+
+  if (loading) {
+    return (
+      <section className="w-full bg-[#fff9f2] py-12 px-4">
+        <div className="max-w-7xl mx-auto flex justify-center items-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="w-full bg-[#fff9f2] py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <ErrorAlert 
+            message={error}
+            onRetry={() => window.location.reload()}
+            type="error"
+          />
+        </div>
+      </section>
+    );
+  }
+
+  if (locations.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full bg-[#fff9f2] py-12 px-4">

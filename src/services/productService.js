@@ -77,7 +77,7 @@ export async function removeFromCart(cartItemId) {
 /**
  * Update cart item quantity
  */
-export async function updateCartQuantity(cartItemId, quantity) {
+export async function updateCartItem(cartItemId, quantity) {
   try {
     const response = await api.put(`/cart/${cartItemId}`, { quantity });
     return response.data;
@@ -87,11 +87,19 @@ export async function updateCartQuantity(cartItemId, quantity) {
   }
 }
 
+/**
+ * Update cart item quantity (alias)
+ */
+export async function updateCartQuantity(cartItemId, quantity) {
+  return updateCartItem(cartItemId, quantity);
+}
+
 export default {
   getProducts,
   getProductById,
   getCart,
   addToCart,
   removeFromCart,
+  updateCartItem,
   updateCartQuantity,
 };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropertyCard from '../ui/PropertyCard';
+import ErrorAlert from '../ui/ErrorAlert';
 import { getFeaturedKos } from '../../services/kosService';
 
 const PropertyListings = () => {
@@ -48,26 +49,22 @@ const PropertyListings = () => {
           
           return {
             id: kamar.id,
+            kosId: kamar.kos?.id || kosId,
+            roomName: kamar.nama_kamar || 'Kamar',
             name: kamar.kos?.nama || 'Kos Tanpa Nama',
             location: kamar.lokasi_kos || kamar.kos?.daerah?.nama || 'Lokasi tidak tersedia',
+            gender: kamar.jenis_kos || 'Campur',
+            floor: kamar.lantai ? `Lantai ${kamar.lantai}` : 'Lantai 1',
+            facilitiesCount: kamar.fasilitas ? `${kamar.fasilitas.length} fasilitas` : '0 fasilitas',
             images: [imageUrl],
             availability: {
               type: 'available',
               text: kamar.nama_kamar || 'Kamar tersedia'
             },
-            plan: kamar.jenis_kos || kamar.tipe_kos || 'kos',
-            deal: {
-              discount: 'promo spesial',
-              limited: 'kamar terbatas'
-            },
-            amenities: [
-              ...(kamar.fasilitas || []).map(f => ({
-                icon: '✓',
-                label: f.nama || f
-              })),
-              { icon: '🏠', label: kamar.jenis_kos || 'kos' },
-              { icon: '🛏️', label: kamar.nama_kamar || 'kamar' }
-            ].slice(0, 5),
+            amenities: (kamar.fasilitas || []).map(f => ({
+              icon: '✓',
+              label: f.nama || f
+            })).slice(0, 5),
             originalPrice: kamar.paket_harga?.perbulan_harga ? kamar.paket_harga.perbulan_harga * 1.2 : 1800000,
             price: kamar.paket_harga?.perbulan_harga || 1500000
           };
@@ -76,12 +73,9 @@ const PropertyListings = () => {
         setProperties(transformedData);
         setError(null);
       } catch (err) {
-        if (!err.isNotFound) {
-          console.error('Failed to fetch properties:', err);
-        }
-        setError('API belum tersedia');
-        // Fallback to dummy data
-        setProperties(getDummyProperties());
+        console.error('Failed to fetch properties:', err);
+        setError('Gagal memuat data properti. Silakan coba lagi.');
+        setProperties([]);
       } finally {
         setLoading(false);
       }
@@ -89,54 +83,6 @@ const PropertyListings = () => {
 
     fetchProperties();
   }, []);
-
-  // Dummy data as fallback
-  const getDummyProperties = () => [
-    {
-      id: 1,
-      name: 'Cove Tanavila Living',
-      location: 'Karawaci',
-      images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop'],
-      availability: { type: 'available', text: 'available' },
-      plan: 'basics',
-      deal: { discount: 'up to 20% off', limited: 'limited rooms' },
-      amenities: [
-        { icon: '🚆', label: '16 mins to train' },
-        { icon: '📶', label: 'shariah' },
-        { icon: '👔', label: 'professionals' },
-        { icon: '🚹', label: 'male only' },
-        { icon: '🏠', label: 'kost' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Cove Ashwood',
-      location: 'Karawaci',
-      images: ['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop'],
-      availability: { type: 'limited', text: 'only 1 unit left' },
-      plan: 'classics',
-      deal: { discount: 'up to 20% off', limited: 'limited rooms' },
-      amenities: [
-        { icon: '🚆', label: '9 mins to bus' },
-        { icon: '📶', label: 'shariah' },
-        { icon: '👨‍🎓', label: 'students' }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Cove Aora',
-      location: 'Meruya',
-      images: ['https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600&h=400&fit=crop'],
-      availability: { type: 'available', text: '4 units available' },
-      plan: 'classics',
-      deal: { discount: 'up to 20% off', limited: 'limited rooms' },
-      amenities: [
-        { icon: '🚆', label: '5 mins to bus' },
-        { icon: '🏢', label: 'umb' },
-        { icon: '👔', label: 'professionals' }
-      ]
-    }
-  ];
 
   // Responsive numVisible based on screen width
   useEffect(() => {
@@ -200,11 +146,18 @@ const PropertyListings = () => {
   if (error) {
     return (
       <section className="w-full py-16 md:py-16 px-4 md:px-6 bg-white">
-        <div className="max-w-7xl mx-auto flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-red-600 mb-4">{error}</p>
-            <p className="text-gray-500 text-sm">Menampilkan data contoh</p>
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8 text-center lg:text-left">
+            <h2 className="text-3xl sm:text-4xl md:text-[36px] lg:text-[40px] font-light text-gray-600 leading-tight m-0 mb-3">
+              come discover <br />
+              <span className="font-bold text-gray-900">our best deals</span>
+            </h2>
           </div>
+          <ErrorAlert 
+            message={error}
+            onRetry={() => window.location.reload()}
+            type="error"
+          />
         </div>
       </section>
     );
