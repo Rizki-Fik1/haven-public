@@ -30,7 +30,7 @@ const CommunityFeatures = () => {
         <div className="order-2 md:order-3 lg:order-3 lg:col-span-1 relative">
           <div className="relative w-full max-w-md mx-auto aspect-[4/3] rounded-tr-[60px] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
             <img
-              src="/src/assets/images/image.png"
+              src={communityImage}
               alt="Co-living community"
               className="w-full h-full object-cover block"
             />
