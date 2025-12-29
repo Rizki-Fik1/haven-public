@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getAuthToken, clearAuthData, redirectToLogin } from '../lib/authUtils';
 
 // Create axios instance with default configuration
 const api = axios.create({
@@ -12,8 +13,8 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage
-    const token = localStorage.getItem('authToken');
+    // Get token from auth utils
+    const token = getAuthToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -33,10 +34,10 @@ api.interceptors.response.use(
     // Handle common error cases
     if (error.response?.status === 401) {
       // Unauthorized - clear auth data and redirect to login
-      localStorage.removeItem('authToken');
+      clearAuthData();
       // Only redirect if not already on login page
       if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
+        redirectToLogin(window.location.pathname);
       }
     }
 

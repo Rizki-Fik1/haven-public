@@ -1,13 +1,30 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { getCartItemCount } from "../../lib/cartUtils";
+import { useAuthContext } from "../../context/AuthContext";
+import { User, LogOut, ChevronDown, Calendar, CreditCard } from "lucide-react";
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, isAuthenticated, isLoading, logout } = useAuthContext();
+  
   const [cartItemCount, setCartItemCount] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [cartBounce, setCartBounce] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef(null);
+
+  // Close user menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setIsUserMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Update cart count on mount and when location changes
   useEffect(() => {
@@ -48,7 +65,13 @@ const Header = () => {
   };
 
   const handleLogin = () => {
-    console.log("Login clicked");
+    navigate("/login");
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsUserMenuOpen(false);
     setIsMobileMenuOpen(false);
   };
 
@@ -157,13 +180,94 @@ const Header = () => {
               )}
             </button>
 
-            {/* Login Button */}
-            <button
-              className="bg-indigo-600 text-white text-[15px] font-semibold py-2.5 px-5 xl:px-6 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap hover:bg-indigo-700 ml-2"
-              onClick={handleLogin}
-            >
-              Login
-            </button>
+            {/* User Menu / Login Button */}
+            {isLoading ? (
+              <div className="w-10 h-10 rounded-full bg-gray-100 animate-pulse ml-2"></div>
+            ) : isAuthenticated && user ? (
+              <div className="relative ml-2" ref={userMenuRef}>
+                <button
+                  className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 py-1.5 px-3 rounded-full transition-all duration-200"
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                >
+                  {/* Profile Photo */}
+                  <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
+                    {user.fotoselfie ? (
+                      <img
+                        src={`https://admin.haven.co.id/img/user/${user.id}/fotoselfie/${user.fotoselfie}`}
+                        alt="User Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <User className="h-5 w-5 text-gray-600" />
+                    )}
+                  </div>
+                  {/* User Info */}
+                  <div className="hidden xl:flex flex-col items-start">
+                    <span className="text-sm font-medium text-gray-800 max-w-[100px] truncate">
+                      {user.nama || 'User'}
+                    </span>
+                    <span className="text-xs text-gray-500">Customer</span>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isUserMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {/* User Info Header */}
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900 truncate">{user.nama}</p>
+                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                    </div>
+                    
+                    {/* Menu Items */}
+                    <Link
+                      to="/account"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4" />
+                      <span>Profile</span>
+                    </Link>
+                    <Link
+                      to="/transaksi"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span>Booking Saya</span>
+                    </Link>
+                    <Link
+                      to="/pembelian"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <CreditCard className="w-4 h-4" />
+                      <span>Daftar Pembelian</span>
+                    </Link>
+                    
+                    {/* Separator */}
+                    <div className="border-t border-gray-100 my-1"></div>
+                    
+                    {/* Logout */}
+                    <button
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Log out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                className="bg-indigo-600 text-white text-[15px] font-semibold py-2.5 px-5 xl:px-6 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap hover:bg-indigo-700 ml-2"
+                onClick={handleLogin}
+              >
+                Login
+              </button>
+            )}
           </nav>
 
           {/* Mobile Right Side (Cart + Menu) */}
@@ -218,6 +322,19 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4 animate-in slide-in-from-top duration-200">
             <nav className="flex flex-col space-y-1">
+              {/* User Info (if logged in) */}
+              {isAuthenticated && user && (
+                <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg mb-2">
+                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                    {user.nama?.charAt(0).toUpperCase() || 'U'}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 truncate">{user.nama}</p>
+                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  </div>
+                </div>
+              )}
+
               <button
                 className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${
                   isActive('/') 
@@ -258,12 +375,24 @@ const Header = () => {
               >
                 Artikel
               </button>
-              <button
-                className="text-left px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors mt-2"
-                onClick={handleLogin}
-              >
-                Login
-              </button>
+
+              {/* Login/Logout Button */}
+              {isAuthenticated ? (
+                <button
+                  className="text-left px-4 py-3 text-red-600 rounded-lg font-medium hover:bg-red-50 transition-colors mt-2 flex items-center gap-2"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-5 h-5" />
+                  Logout
+                </button>
+              ) : (
+                <button
+                  className="text-left px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors mt-2"
+                  onClick={handleLogin}
+                >
+                  Login
+                </button>
+              )}
             </nav>
           </div>
         )}
@@ -273,3 +402,4 @@ const Header = () => {
 };
 
 export default Header;
+

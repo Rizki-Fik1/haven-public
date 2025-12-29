@@ -28,7 +28,7 @@ const CommunityFeatures = () => {
 
         {/* Right Image - Order 2 on mobile, 3 on tablet */}
         <div className="order-2 md:order-3 lg:order-3 lg:col-span-1 relative">
-          <div className="relative w-full max-w-md mx-auto aspect-[4/3] rounded-tr-[60px] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
+          <div className="relative w-full max-w-md mx-auto aspect-[4/3] rounded-tr-[60px] rounded-bl-[60px] overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
             <img
               src={communityImage}
               alt="Co-living community"

@@ -1,27 +1,28 @@
+import { Link } from 'react-router-dom';
+import { MdEmail, MdPhone, MdLocationOn, MdAccessTime } from 'react-icons/md';
+import logo from '../../assets/images/logo_22.png';
+
 const Footer = () => {
   const footerLinks = {
-    company: [
-      { label: 'About us', onClick: () => console.log('About clicked') },
-      { label: 'Careers', onClick: () => console.log('Careers clicked') },
-      { label: 'Press', onClick: () => console.log('Press clicked') },
-      { label: 'Blog', onClick: () => console.log('Blog clicked') }
+    quickLinks: [
+      { label: 'Home', to: '/' },
+      { label: 'About Us', to: '/about' },
+      { label: 'Properties', to: '/properties' },
+      { label: 'Contact', to: '/contact' },
+      { label: 'Blog', to: '/blog' }
     ],
-    residents: [
-      { label: 'Find a home', onClick: () => console.log('Find home clicked') },
-      { label: 'Locations', onClick: () => console.log('Locations clicked') },
-      { label: 'Community', onClick: () => console.log('Community clicked') },
-      { label: 'FAQs', onClick: () => console.log('FAQs clicked') }
+    siteLinks: [
+      { label: 'Privacy Policy', to: '/privacy' },
+      { label: 'Terms of Service', to: '/terms' },
+      { label: 'FAQ', to: '/faq' },
+      { label: 'Support', to: '/support' },
+      { label: 'Careers', to: '/careers' }
     ],
-    landlords: [
-      { label: 'List your property', onClick: () => console.log('List property clicked') },
-      { label: 'Property management', onClick: () => console.log('Management clicked') },
-      { label: 'Resources', onClick: () => console.log('Resources clicked') },
-      { label: 'Contact', onClick: () => console.log('Contact clicked') }
-    ],
-    legal: [
-      { label: 'Privacy policy', onClick: () => console.log('Privacy clicked') },
-      { label: 'Terms of service', onClick: () => console.log('Terms clicked') },
-      { label: 'Cookie policy', onClick: () => console.log('Cookie clicked') }
+    contact: [
+      { icon: <MdEmail className="text-indigo-400" size={18} />, text: 'hello@haven.com' },
+      { icon: <MdPhone className="text-indigo-400" size={18} />, text: '+62 812 3456 7890' },
+      { icon: <MdLocationOn className="text-indigo-400" size={18} />, text: 'Jakarta, Indonesia' },
+      { icon: <MdAccessTime className="text-indigo-400" size={18} />, text: '24/7 Customer Support' }
     ]
   };
 
@@ -70,15 +71,13 @@ const Footer = () => {
       <div className="max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_2.5fr] gap-12 lg:gap-20 pb-12 border-b border-gray-700">
           <div className="flex flex-col gap-5">
-            <svg width="100" height="40" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <text x="0" y="30" fill="#4F46E5" fontSize="28" fontWeight="600" fontFamily="Arial, sans-serif">
-                Haven
-              </text>
-            </svg>
+            <img 
+              src={logo} 
+              alt="HAVEN Logo" 
+              className="rounded max-w-48" 
+            />
             <p className="text-[15px] leading-relaxed text-gray-400 m-0">
-              Modern co-living spaces for
-              <br />
-              the next generation
+              Platform apartemen dan penginapan terbaik untuk kenyamanan liburan anda.
             </p>
             <div className="flex gap-3 mt-2">
               {socialLinks.map((social) => (
@@ -89,46 +88,35 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
             <div>
-              <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wide m-0 mb-5">Company</h3>
+              <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wide m-0 mb-5">Quick Links</h3>
               <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                {footerLinks.company.map((link, index) => (
+                {footerLinks.quickLinks.map((link, index) => (
                   <li key={index}>
-                    <button onClick={link.onClick} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600">{link.label}</button>
+                    <Link to={link.to} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600 no-underline">{link.label}</Link>
                   </li>
                 ))}
               </ul>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wide m-0 mb-5">For Residents</h3>
+              <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wide m-0 mb-5">Site Links</h3>
               <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                {footerLinks.residents.map((link, index) => (
+                {footerLinks.siteLinks.map((link, index) => (
                   <li key={index}>
-                    <button onClick={link.onClick} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600">{link.label}</button>
+                    <Link to={link.to} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600 no-underline">{link.label}</Link>
                   </li>
                 ))}
               </ul>
             </div>
 
             <div>
-              <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wide m-0 mb-5">For Landlords</h3>
+              <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wide m-0 mb-5">Hubungi Kami Sekarang Juga!</h3>
               <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                {footerLinks.landlords.map((link, index) => (
-                  <li key={index}>
-                    <button onClick={link.onClick} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600">{link.label}</button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-gray-50 uppercase tracking-wide m-0 mb-5">Legal</h3>
-              <ul className="list-none p-0 m-0 flex flex-col gap-3">
-                {footerLinks.legal.map((link, index) => (
-                  <li key={index}>
-                    <button onClick={link.onClick} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600">{link.label}</button>
+                {footerLinks.contact.map((item, index) => (
+                  <li key={index} className="text-gray-400 text-[15px] flex items-center gap-2">
+                    {item.icon} {item.text}
                   </li>
                 ))}
               </ul>
@@ -138,15 +126,8 @@ const Footer = () => {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-8 gap-4">
           <p className="text-sm text-gray-500 m-0">
-            © 2025 Cove. All rights reserved.
+            © 2024 Haven. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <button className="bg-transparent border-none text-gray-500 text-sm cursor-pointer transition-colors duration-200 p-0 hover:text-indigo-600">Privacy</button>
-            <span className="text-gray-600">•</span>
-            <button className="bg-transparent border-none text-gray-500 text-sm cursor-pointer transition-colors duration-200 p-0 hover:text-indigo-600">Terms</button>
-            <span className="text-gray-600">•</span>
-            <button className="bg-transparent border-none text-gray-500 text-sm cursor-pointer transition-colors duration-200 p-0 hover:text-indigo-600">Sitemap</button>
-          </div>
         </div>
       </div>
     </footer>
