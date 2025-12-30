@@ -32,7 +32,11 @@ const CartPage = () => {
   };
 
   const handleUpdateQuantity = (productId, newQuantity) => {
-    if (newQuantity < 1) return;
+    // If quantity would be 0 or less, remove the item
+    if (newQuantity < 1) {
+      handleRemoveItem(productId);
+      return;
+    }
     
     try {
       setUpdating(productId);
@@ -248,7 +252,7 @@ const CartPage = () => {
                         <div className="flex items-center border border-gray-300 rounded-lg">
                           <button
                             onClick={() => handleUpdateQuantity(item.id_produk, quantity - 1)}
-                            disabled={updating === item.id_produk || quantity <= 1}
+                            disabled={updating === item.id_produk}
                             className="p-2 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                           >
                             <Minus className="w-4 h-4" />
