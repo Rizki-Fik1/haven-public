@@ -22,7 +22,9 @@ import TransaksiPage from './pages/transaksi/transaksi.jsx'
 import PembelianPage from './pages/pembelian/pembelian.jsx'
 import ProfilePage from './pages/profile/profile.jsx'
 import TagihanPage from './pages/tagihan/tagihan.jsx'
-import KeluhanPage from './pages/keluhan/keluhan.jsx'
+import KeluhanPage from './pages/keluhan/keluhan.jsx';
+import BookingPage from './pages/booking/BookingPage.jsx';
+import BookingSuccessPage from './pages/booking/BookingSuccessPage.jsx';
 
 // Google OAuth Client ID
 const GOOGLE_CLIENT_ID = '765052662516-j1jda1d7pf0o9b5b6kkp4eog3o3cnaov.apps.googleusercontent.com'
@@ -56,6 +58,8 @@ createRoot(document.getElementById('root')).render(
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/tagihan" element={<TagihanPage />} />
               <Route path="/keluhan" element={<KeluhanPage />} />
+              <Route path="/booking" element={<BookingPage />} />
+              <Route path="/booking/success" element={<BookingSuccessPage />} />
               
               {/* Main App Routes (with layout) */}
               <Route path="/" element={<App />}>
