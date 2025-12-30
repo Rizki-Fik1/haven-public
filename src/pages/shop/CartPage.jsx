@@ -17,7 +17,6 @@ const CartPage = () => {
   const [updating, setUpdating] = useState(null);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [showClearModal, setShowClearModal] = useState(false);
-  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   const [showEmptyCartModal, setShowEmptyCartModal] = useState(false);
   const [itemToRemove, setItemToRemove] = useState(null);
   const [errorModal, setErrorModal] = useState({ show: false, message: '' });
@@ -105,6 +104,7 @@ const CartPage = () => {
       setShowEmptyCartModal(true);
       return;
     }
+    // Navigate to checkout page
     navigate('/checkout');
   };
 
@@ -145,18 +145,6 @@ const CartPage = () => {
         confirmText="Hapus Semua"
         cancelText="Batal"
         type="danger"
-      />
-
-      {/* Checkout Modal */}
-      <ConfirmModal
-        isOpen={showCheckoutModal}
-        onClose={() => setShowCheckoutModal(false)}
-        onConfirm={() => setShowCheckoutModal(false)}
-        title="Segera Hadir"
-        message="Fitur checkout akan segera hadir!"
-        confirmText="OK"
-        cancelText=""
-        type="info"
       />
 
       {/* Empty Cart Modal */}

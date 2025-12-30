@@ -26,6 +26,7 @@ import TagihanPage from './pages/tagihan/tagihan.jsx'
 import KeluhanPage from './pages/keluhan/keluhan.jsx';
 import BookingPage from './pages/booking/BookingPage.jsx';
 import BookingSuccessPage from './pages/booking/BookingSuccessPage.jsx';
+import TestPaymentPage from './pages/TestPaymentPage.jsx';
 
 // Google OAuth Client ID
 const GOOGLE_CLIENT_ID = '765052662516-j1jda1d7pf0o9b5b6kkp4eog3o3cnaov.apps.googleusercontent.com'
@@ -73,6 +74,7 @@ createRoot(document.getElementById('root')).render(
                 <Route path="article/:id" element={<ArticleDetail />} />
                 <Route path="getKos/:kosId" element={<KosDetailPage />} />
                 <Route path="getKamar/:kosId/kamar/:kamarId" element={<KamarDetailPage />} />
+                <Route path="test-payment" element={<TestPaymentPage />} />
               </Route>
             </Routes>
           </AuthProvider>

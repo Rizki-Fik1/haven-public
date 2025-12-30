@@ -1,359 +1,224 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import checkoutService from '../../services/checkoutService';
-import { getProducts } from '../../services/products';
-import { getCartItems, getCartTotal, clearCart } from '../../lib/cartUtils';
-import { getImageUrl } from '../../lib/utils';
+import { ArrowLeft, ShoppingBag, CreditCard, User, Mail, Phone } from 'lucide-react';
 import { useAuthContext } from '../../context/AuthContext';
+import { getCartItems, clearCart, getCartTotal } from '../../lib/cartUtils';
+import { getImageUrl } from '../../lib/utils';
+import { useCreatePayment, usePaymentChannels, useCalculateFee } from '../../hooks/useTripay';
+import { createTransaksiProduk } from '../../services/transaksiService';
+import ConfirmModal from '../../components/ui/ConfirmModal';
+import ErrorAlert from '../../components/ui/ErrorAlert';
 
-/**
- * Checkout Page - Integrated with API
- * Layout: Left (Customer Info) | Right (Products + Payment + Summary)
- */
 const CheckoutPage = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuthContext();
-  const [products, setProducts] = useState([]);
-  const [paymentChannels, setPaymentChannels] = useState([]);
+  const { user, isAuthenticated } = useAuthContext();
   const [cartItems, setCartItems] = useState([]);
-  const [selectedPayment, setSelectedPayment] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [loadingPaymentChannels, setLoadingPaymentChannels] = useState(true);
-  const [paymentError, setPaymentError] = useState(null);
-  const [customerInfo, setCustomerInfo] = useState({
-    name: '',
+  const [error, setError] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // Use Tripay hooks
+  const { data: channelsData, isLoading: channelsLoading } = usePaymentChannels();
+  const createPaymentMutation = useCreatePayment();
+
+  const [formData, setFormData] = useState({
+    nama: '',
     email: '',
-    phone: ''
+    phone: '',
+    payment_method: ''
   });
 
-  // Check authentication and redirect if not logged in
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      alert('Silakan login terlebih dahulu untuk melakukan checkout');
-      navigate('/login', { state: { from: '/checkout' } });
-    }
-  }, [authLoading, isAuthenticated, navigate]);
+  // Calculate fee based on selected payment method
+  const subtotal = calculateSubtotal();
+  const { fee, total } = useCalculateFee(subtotal, formData.payment_method);
 
-  // Auto-fill customer info from logged in user
+  const paymentChannels = channelsData?.data || [];
+
   useEffect(() => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    const items = getCartItems();
+    if (items.length === 0) {
+      navigate('/cart');
+      return;
+    }
+    setCartItems(items);
+
     if (user) {
-      setCustomerInfo({
-        name: user.nama || user.name || '',
+      setFormData({
+        nama: user.name || '',
         email: user.email || '',
-        phone: user.no_telp || user.phone || user.no_hp || ''
+        phone: user.phone || '',
+        payment_method: ''
       });
     }
-  }, [user]);
+  }, [isAuthenticated, user, navigate]);
 
-  // Load data saat component mount
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadInitialData();
-    }
-  }, [isAuthenticated]);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-  const loadInitialData = async () => {
-    try {
-      setLoading(true);
-      
-      // Load cart items
-      const items = getCartItems();
-      if (items.length === 0) {
-        alert('Keranjang kosong! Silakan tambahkan produk terlebih dahulu.');
-        navigate('/cart');
-        return;
+  const getProductImage = (product) => {
+    if (product.gambar && Array.isArray(product.gambar) && product.gambar.length > 0) {
+      const imageObj = product.gambar[0];
+      if (typeof imageObj === 'string') return getImageUrl(imageObj);
+      if (typeof imageObj === 'object' && imageObj !== null) {
+        const imageUrl = imageObj.url_gambar || imageObj.url || imageObj.path || '';
+        if (imageUrl) return getImageUrl(imageUrl);
       }
-      setCartItems(items);
-
-      // Load products (optional, untuk validasi)
-      try {
-        const productsData = await getProducts();
-        setProducts(productsData.data || []);
-      } catch (err) {
-        console.error('Error loading products:', err);
-      }
-
-      // Load payment channels
-      setLoadingPaymentChannels(true);
-      setPaymentError(null);
-      try {
-        const channelsData = await checkoutService.getPaymentChannels();
-        console.log('Payment channels response:', channelsData);
-        
-        if (channelsData.success && channelsData.data) {
-          setPaymentChannels(channelsData.data);
-        } else {
-          setPaymentError('Format response payment channels tidak sesuai');
-          console.error('Invalid payment channels response:', channelsData);
-        }
-      } catch (err) {
-        console.error('Error loading payment channels:', err);
-        const errorMsg = err.response?.data?.message || err.message || 'Gagal memuat metode pembayaran';
-        setPaymentError(errorMsg);
-        
-        // Jika endpoint tidak tersedia, gunakan fallback dengan lebih banyak metode
-        console.warn('Using fallback payment methods');
-        setPaymentChannels([
-          // Virtual Account
-          {
-            code: 'BRIVA',
-            name: 'BRI Virtual Account',
-            group: 'Virtual Account',
-            fee_customer: { flat: 4000, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/BRIVA.png',
-            active: true
-          },
-          {
-            code: 'BNIVA',
-            name: 'BNI Virtual Account',
-            group: 'Virtual Account',
-            fee_customer: { flat: 4000, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/BNIVA.png',
-            active: true
-          },
-          {
-            code: 'MANDIRIVA',
-            name: 'Mandiri Virtual Account',
-            group: 'Virtual Account',
-            fee_customer: { flat: 4000, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/MANDIRIVA.png',
-            active: true
-          },
-          {
-            code: 'BCAVA',
-            name: 'BCA Virtual Account',
-            group: 'Virtual Account',
-            fee_customer: { flat: 4000, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/BCAVA.png',
-            active: true
-          },
-          {
-            code: 'PERMATAVA',
-            name: 'Permata Virtual Account',
-            group: 'Virtual Account',
-            fee_customer: { flat: 4000, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/PERMATAVA.png',
-            active: true
-          },
-          {
-            code: 'CIMBVA',
-            name: 'CIMB Niaga Virtual Account',
-            group: 'Virtual Account',
-            fee_customer: { flat: 4000, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/CIMBVA.png',
-            active: true
-          },
-          // E-Wallet
-          {
-            code: 'QRIS',
-            name: 'QRIS (Semua E-Wallet)',
-            group: 'QRIS',
-            fee_customer: { flat: 0, percent: 0.7 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/QRIS.png',
-            active: true
-          },
-          {
-            code: 'SHOPEEPAY',
-            name: 'ShopeePay',
-            group: 'E-Wallet',
-            fee_customer: { flat: 0, percent: 2 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/SHOPEEPAY.png',
-            active: true
-          },
-          {
-            code: 'OVO',
-            name: 'OVO',
-            group: 'E-Wallet',
-            fee_customer: { flat: 0, percent: 2 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/OVO.png',
-            active: true
-          },
-          {
-            code: 'DANA',
-            name: 'DANA',
-            group: 'E-Wallet',
-            fee_customer: { flat: 0, percent: 1.5 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/DANA.png',
-            active: true
-          },
-          // Convenience Store
-          {
-            code: 'ALFAMART',
-            name: 'Alfamart',
-            group: 'Convenience Store',
-            fee_customer: { flat: 2500, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/ALFAMART.png',
-            active: true
-          },
-          {
-            code: 'INDOMARET',
-            name: 'Indomaret',
-            group: 'Convenience Store',
-            fee_customer: { flat: 2500, percent: 0 },
-            icon_url: 'https://tripay.co.id/images/payment_icon/INDOMARET.png',
-            active: true
-          }
-        ]);
-      } finally {
-        setLoadingPaymentChannels(false);
-      }
-      
-    } catch (error) {
-      console.error('Error loading data:', error);
-      alert('Gagal memuat data. Silakan refresh halaman.');
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const handleCheckout = async () => {
-    // Validasi
-    if (cartItems.length === 0) {
-      alert('Keranjang kosong!');
-      return;
-    }
-    
-    if (!selectedPayment) {
-      alert('Pilih metode pembayaran terlebih dahulu');
-      return;
-    }
-
-    if (!customerInfo.name || !customerInfo.email) {
-      alert('Nama dan email harus diisi');
-      return;
-    }
-
-    if (!user || !user.id) {
-      alert('User ID tidak ditemukan. Silakan login ulang.');
-      navigate('/login');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Untuk setiap item di cart, buat checkout
-      const checkoutPromises = cartItems.map(item => {
-        const checkoutData = {
-          id_user: user.id,
-          id_produk: item.id_produk,
-          jumlah: item.quantity, // ✅ Backend expect "jumlah" (bukan "quantity")
-          metode_pembayaran: selectedPayment, // ✅ Backend expect "metode_pembayaran"
-          nama_customer: customerInfo.name, // ✅ Backend expect "nama_customer"
-          email_customer: customerInfo.email, // ✅ Backend expect "email_customer"
-          no_hp_customer: customerInfo.phone || '', // ✅ Backend expect "no_hp_customer"
-          tripay_merchant_ref: `ORDER-${Date.now()}-${item.id_produk}`,
-          callback_url: `${window.location.origin}/api/tripay/callback`,
-          return_url: `${window.location.origin}/transaksi`,
-          expired_time: 24,
-        };
-        
-        console.log('Checkout data:', checkoutData); // Debug
-        return checkoutService.createCheckout(checkoutData);
-      });
-
-      const results = await Promise.all(checkoutPromises);
-      
-      console.log('Checkout results:', results);
-      
-      // Ambil checkout URL dari result pertama
-      const firstResult = results[0];
-      
-      // Clear cart setelah berhasil
-      clearCart();
-      window.dispatchEvent(new Event('cartUpdated'));
-      
-      // Redirect ke halaman pembayaran
-      if (firstResult.data?.checkout_url) {
-        window.location.href = firstResult.data.checkout_url;
-      } else if (firstResult.data?.pay_url) {
-        window.location.href = firstResult.data.pay_url;
-      } else {
-        alert('Checkout berhasil! Reference: ' + firstResult.data?.reference);
-        navigate('/shop');
-      }
-      
-    } catch (error) {
-      console.error('Checkout error:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Checkout gagal, silakan coba lagi';
-      alert(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const calculateTotal = () => {
-    return getCartTotal();
-  };
-
-  const getSelectedPaymentFee = () => {
-    if (!selectedPayment) return 0;
-    const channel = paymentChannels.find(ch => ch.code === selectedPayment);
-    return channel?.fee_customer?.flat || 0;
-  };
-
-  const calculateGrandTotal = () => {
-    return calculateTotal() + getSelectedPaymentFee();
-  };
-
-  const getProductImage = (item) => {
-    if (item.gambar && Array.isArray(item.gambar) && item.gambar.length > 0) {
-      return getImageUrl(item.gambar[0]);
-    }
-    if (typeof item.gambar === 'string') {
-      return getImageUrl(item.gambar);
-    }
+    if (typeof product.gambar === 'string') return getImageUrl(product.gambar);
     return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop&q=80';
   };
 
-  // Show loading while checking authentication
-  if (authLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Checking authentication...</p>
-        </div>
-      </div>
-    );
-  }
+  const calculateSubtotal = () => getCartTotal();
 
-  // Don't render if not authenticated (will redirect)
+  const calculateGrandTotal = () => total || subtotal;
+
+  const handleCheckout = async () => {
+    if (!formData.nama || !formData.email || !formData.phone) {
+      setError('Mohon lengkapi data customer');
+      return;
+    }
+
+    if (!formData.payment_method) {
+      setError('Mohon pilih metode pembayaran');
+      return;
+    }
+
+    if (cartItems.length === 0) {
+      setError('Keranjang belanja kosong');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log('Cart items:', cartItems);
+
+      // Validate cart items have required fields
+      const invalidItems = cartItems.filter(item => 
+        (!item.id_produk && !item.id) || 
+        (!item.judul_produk && !item.nama) || 
+        !item.harga
+      );
+      if (invalidItems.length > 0) {
+        console.error('Invalid cart items:', invalidItems);
+        throw new Error('Beberapa produk di keranjang tidak valid. Silakan refresh halaman.');
+      }
+
+      const tripayPayload = {
+        method: formData.payment_method,
+        customerName: formData.nama,
+        customerEmail: formData.email,
+        customerPhone: formData.phone,
+        orderItems: cartItems.map(item => ({
+          sku: String(item.id_produk || item.id || ''),
+          name: item.judul_produk || item.nama || item.name || 'Product',
+          price: parseInt(item.harga || item.price || 0),
+          quantity: parseInt(item.quantity || 1)
+        })),
+        amount: calculateGrandTotal(),
+        merchantRef: `ORDER-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+        expiryHours: 24
+      };
+
+      console.log('Creating Tripay payment...', tripayPayload);
+      const tripayResponse = await createTripayPayment(tripayPayload);
+      
+      if (!tripayResponse.success) {
+        throw new Error(tripayResponse.message || 'Gagal membuat pembayaran');
+      }
+
+      const tripayData = tripayResponse.data;
+      console.log('Tripay response:', tripayData);
+
+      const transaksiPromises = cartItems.map(item => {
+        const transaksiData = {
+          id_user: user.id,
+          id_produk: item.id || item.id_produk,
+          tripay_merchant_ref: tripayData.merchant_ref || tripayPayload.merchantRef,
+          link_payment: tripayData.checkout_url || tripayData.payment_url || '',
+          jumlah: parseInt(item.quantity || 1),
+          harga_satuan: parseInt(item.harga || item.price || 0),
+          subtotal: parseInt(item.harga || item.price || 0) * parseInt(item.quantity || 1),
+          tanggal_transaksi: new Date().toISOString().split('T')[0],
+          status: 'belum_lunas'
+        };
+
+        console.log('Creating transaksi:', transaksiData);
+        return createTransaksiProduk(transaksiData);
+      });
+
+      await Promise.all(transaksiPromises);
+
+      clearCart();
+      window.dispatchEvent(new Event('cartUpdated'));
+
+      if (tripayData.checkout_url || tripayData.payment_url) {
+        window.location.href = tripayData.checkout_url || tripayData.payment_url;
+      } else {
+        navigate('/pembelian');
+      }
+
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError(err.response?.data?.message || err.message || 'Gagal melakukan checkout');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLoginRedirect = () => {
+    navigate('/login', { state: { from: '/checkout' } });
+  };
+
   if (!isAuthenticated) {
-    return null;
+    return (
+      <ConfirmModal
+        isOpen={showLoginModal}
+        title="Login Required"
+        message="Anda harus login terlebih dahulu untuk melakukan checkout"
+        confirmText="Login"
+        cancelText="Kembali"
+        onConfirm={handleLoginRedirect}
+        onCancel={() => navigate('/cart')}
+        type="info"
+      />
+    );
   }
 
-  if (loading && cartItems.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
+  if (cartItems.length === 0) {
+    return null;
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <button
-          onClick={() => navigate('/cart')}
-          className="mb-6 text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Kembali ke Keranjang</span>
-        </button>
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="mb-8">
+          <button
+            onClick={() => navigate('/cart')}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <ArrowLeft size={20} />
+            <span>Kembali ke Keranjang</span>
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
+          <p className="text-gray-600 mt-2">Lengkapi data dan pilih metode pembayaran</p>
+        </div>
 
-        <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-        
-        {/* Flex Layout: Left (Customer Info) | Right (Products + Payment + Summary) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          {/* LEFT COLUMN - Customer Information */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Informasi Customer</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <User className="text-indigo-600" size={24} />
+                <h2 className="text-xl font-bold text-gray-900">Informasi Customer</h2>
+              </div>
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -361,186 +226,174 @@ const CheckoutPage = () => {
                   </label>
                   <input
                     type="text"
-                    value={customerInfo.name}
-                    onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
+                    name="nama"
+                    value={formData.nama}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="Masukkan nama lengkap"
-                    readOnly
+                    required
                   />
-                  <p className="text-xs text-gray-500 mt-1">Data dari akun Anda</p>
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Email *
                   </label>
-                  <input
-                    type="email"
-                    value={customerInfo.email}
-                    onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
-                    placeholder="email@example.com"
-                    readOnly
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Data dari akun Anda</p>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder="email@example.com"
+                      required
+                    />
+                  </div>
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    No. Telepon (Opsional)
+                    No. Telepon *
                   </label>
-                  <input
-                    type="tel"
-                    value={customerInfo.phone}
-                    onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    placeholder="081234567890"
-                  />
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder="08123456789"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <CreditCard className="text-indigo-600" size={24} />
+                <h2 className="text-xl font-bold text-gray-900">Metode Pembayaran</h2>
+              </div>
+
+              {channelsLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+                  <p className="text-sm text-gray-600 mt-2">Memuat metode pembayaran...</p>
+                </div>
+              ) : paymentChannels.length === 0 ? (
+                <div className="text-center py-8 text-gray-600">
+                  <p>Tidak ada metode pembayaran tersedia</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {paymentChannels.map((method) => (
+                    <label
+                      key={method.code}
+                      className={`flex items-center justify-between p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        formData.payment_method === method.code
+                          ? 'border-indigo-600 bg-indigo-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="radio"
+                          name="payment_method"
+                          value={method.code}
+                          checked={formData.payment_method === method.code}
+                          onChange={handleInputChange}
+                          className="w-4 h-4 text-indigo-600"
+                        />
+                        <div>
+                          <span className="font-medium text-gray-900 block">{method.name}</span>
+                          <span className="text-xs text-gray-500">{method.group}</span>
+                        </div>
+                      </div>
+                      {method.total_fee && (method.total_fee.flat > 0 || method.total_fee.percent > 0) && (
+                        <span className="text-sm text-gray-600">
+                          Fee: Rp {method.total_fee.flat.toLocaleString('id-ID')}
+                          {method.total_fee.percent > 0 && ` + ${method.total_fee.percent}%`}
+                        </span>
+                      )}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* RIGHT COLUMN - Products + Payment + Summary */}
-          <div className="lg:col-span-2 space-y-6">
-            
-            {/* Cart Items */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Produk yang Dibeli</h2>
-              <div className="space-y-4">
-                {cartItems.map(item => (
-                  <div key={item.id_produk} className="flex gap-4 py-4 border-b border-gray-100 last:border-0">
-                    <div className="w-20 h-20 flex-shrink-0">
-                      <img
-                        src={getProductImage(item)}
-                        alt={item.judul_produk}
-                        className="w-full h-full object-cover rounded-lg"
-                        onError={(e) => {
-                          e.target.src = 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop&q=80';
-                        }}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{item.judul_produk}</h3>
-                      <p className="text-gray-500 text-sm mb-1">
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-sm p-6 sticky top-8">
+              <div className="flex items-center gap-3 mb-6">
+                <ShoppingBag className="text-indigo-600" size={24} />
+                <h2 className="text-xl font-bold text-gray-900">Ringkasan Pesanan</h2>
+              </div>
+
+              <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
+                {cartItems.map((item) => (
+                  <div key={item.id_produk || item.id} className="flex gap-3">
+                    <img
+                      src={getProductImage(item)}
+                      alt={item.judul_produk || item.nama}
+                      className="w-16 h-16 object-cover rounded-lg"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-medium text-gray-900 truncate">
+                        {item.judul_produk || item.nama}
+                      </h3>
+                      <p className="text-sm text-gray-600">
                         {item.quantity} x Rp {parseInt(item.harga).toLocaleString('id-ID')}
-                      </p>
-                      <p className="text-indigo-600 font-bold">
-                        Rp {(parseInt(item.harga) * item.quantity).toLocaleString('id-ID')}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
 
-            {/* Payment Method Selection */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Pilih Metode Pembayaran</h2>
-              
-              {loadingPaymentChannels ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
-                  <p className="mt-2 text-gray-500">Loading payment methods...</p>
+              <div className="border-t border-gray-200 pt-4 space-y-3">
+                <div className="flex justify-between text-gray-600">
+                  <span>Subtotal</span>
+                  <span>Rp {subtotal.toLocaleString('id-ID')}</span>
                 </div>
-              ) : paymentError ? (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                  <p className="text-yellow-800 text-sm">
-                    ⚠️ {paymentError}
-                  </p>
-                  <p className="text-yellow-700 text-xs mt-1">
-                    Menggunakan metode pembayaran default. Silakan hubungi admin jika ada masalah.
-                  </p>
-                </div>
-              ) : paymentChannels.length === 0 ? (
-                <p className="text-gray-500">Tidak ada metode pembayaran tersedia</p>
-              ) : null}
-              
-              {paymentChannels.length > 0 && (
-                <>
-                  {/* Group by payment type */}
-                  {['Virtual Account', 'E-Wallet', 'Convenience Store', 'QRIS'].map(group => {
-                    const groupChannels = paymentChannels.filter(ch => ch.group === group);
-                    if (groupChannels.length === 0) return null;
 
-                    return (
-                      <div key={group} className="mb-6 last:mb-0">
-                        <h3 className="text-sm font-semibold text-gray-700 mb-3">{group}</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {groupChannels.map(channel => (
-                            <div
-                              key={channel.code}
-                              onClick={() => setSelectedPayment(channel.code)}
-                              className={`p-4 border-2 rounded-lg cursor-pointer transition-all flex items-center justify-between ${
-                                selectedPayment === channel.code
-                                  ? 'border-indigo-500 bg-indigo-50'
-                                  : 'border-gray-200 hover:border-indigo-300'
-                              }`}
-                            >
-                              <div className="flex items-center space-x-3">
-                                {channel.icon_url && (
-                                  <img
-                                    src={channel.icon_url}
-                                    alt={channel.name}
-                                    className="w-12 h-12 object-contain"
-                                    onError={(e) => {
-                                      e.target.style.display = 'none';
-                                    }}
-                                  />
-                                )}
-                                <div>
-                                  <p className="font-medium">{channel.name}</p>
-                                  <p className="text-sm text-gray-500">
-                                    Fee: Rp {channel.fee_customer?.flat?.toLocaleString('id-ID') || 0}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-            </div>
-
-            {/* Order Summary */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span>Rp {calculateTotal().toLocaleString('id-ID')}</span>
-                </div>
-                {selectedPayment && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Biaya Admin</span>
-                    <span>Rp {getSelectedPaymentFee().toLocaleString('id-ID')}</span>
+                {fee > 0 && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Biaya Admin</span>
+                    <span>Rp {fee.toLocaleString('id-ID')}</span>
                   </div>
                 )}
-                <div className="border-t pt-2 mt-2">
-                  <div className="flex justify-between text-lg font-bold">
-                    <span>Total</span>
-                    <span className="text-indigo-600">
-                      Rp {calculateGrandTotal().toLocaleString('id-ID')}
-                    </span>
-                  </div>
+
+                <div className="flex justify-between text-lg font-bold text-gray-900 pt-3 border-t border-gray-200">
+                  <span>Total</span>
+                  <span>Rp {calculateGrandTotal().toLocaleString('id-ID')}</span>
                 </div>
               </div>
 
-              {/* Checkout Button */}
+              {error && (
+                <div className="mt-4">
+                  <ErrorAlert
+                    message={error}
+                    onClose={() => setError(null)}
+                    type="error"
+                  />
+                </div>
+              )}
+
               <button
                 onClick={handleCheckout}
-                disabled={loading || cartItems.length === 0 || !selectedPayment}
-                className={`w-full mt-6 py-4 rounded-lg font-semibold text-white transition-all ${
-                  loading || cartItems.length === 0 || !selectedPayment
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-indigo-600 hover:bg-indigo-700 active:scale-95 shadow-md hover:shadow-lg'
-                }`}
+                disabled={createPaymentMutation.isPending || !formData.payment_method}
+                className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                {loading ? 'Processing...' : 'Checkout Sekarang'}
+                {createPaymentMutation.isPending ? 'Memproses...' : 'Bayar Sekarang'}
               </button>
-            </div>
 
+              <p className="text-xs text-gray-500 text-center mt-4">
+                Dengan melanjutkan, Anda menyetujui syarat dan ketentuan yang berlaku
+              </p>
+            </div>
           </div>
         </div>
       </div>
