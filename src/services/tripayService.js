@@ -2,17 +2,31 @@ import api from "./axios";
 
 /**
  * Tripay Service - Handle payment gateway operations
- * Complete service for Tripay integration
+ * Complete service for Tripay integration via Vercel Serverless Functions
  */
 
+// Get Vercel API base URL from environment
+const VERCEL_API_URL = import.meta.env.VITE_VERCEL_API_URL || '';
+
 /**
- * Get available payment channels from Tripay via backend
+ * Get available payment channels from Tripay via Vercel API
  * @returns {Promise} Payment channels response
  */
 export const getTripayPaymentChannels = async () => {
   try {
-    const response = await api.get('/tripay/payment-channels');
-    return response.data;
+    // Call Vercel serverless function instead of backend
+    const url = VERCEL_API_URL 
+      ? `${VERCEL_API_URL}/api/tripay/payment-channels`
+      : '/api/tripay/payment-channels';
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch payment channels');
+    }
+    
+    return data;
   } catch (error) {
     console.error('Error fetching Tripay payment channels:', error);
     throw error;
@@ -20,7 +34,7 @@ export const getTripayPaymentChannels = async () => {
 };
 
 /**
- * Create Tripay payment transaction via backend API
+ * Create Tripay payment transaction via Vercel API
  * @param {Object} params - Payment parameters
  * @param {string} params.method - Payment method code
  * @param {string} params.customerName - Customer name
@@ -56,8 +70,26 @@ export const createTripayPayment = async (params) => {
   };
 
   try {
-    const response = await api.post("/tripay/create-payment", requestData);
-    return response.data;
+    // Call Vercel serverless function instead of backend
+    const url = VERCEL_API_URL 
+      ? `${VERCEL_API_URL}/api/tripay/create-payment`
+      : '/api/tripay/create-payment';
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to create payment');
+    }
+    
+    return data;
   } catch (error) {
     console.error('Error creating Tripay payment:', error);
     throw error;
@@ -65,16 +97,25 @@ export const createTripayPayment = async (params) => {
 };
 
 /**
- * Get payment transaction detail from Tripay
+ * Get payment transaction detail from Tripay via Vercel API
  * @param {string} reference - Transaction reference
  * @returns {Promise} Transaction detail response
  */
 export const getTripayTransactionDetail = async (reference) => {
   try {
-    const response = await api.get(`/tripay/transaction-detail`, {
-      params: { reference }
-    });
-    return response.data;
+    // Call Vercel serverless function instead of backend
+    const url = VERCEL_API_URL 
+      ? `${VERCEL_API_URL}/api/tripay/transaction-detail?reference=${reference}`
+      : `/api/tripay/transaction-detail?reference=${reference}`;
+    
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch transaction detail');
+    }
+    
+    return data;
   } catch (error) {
     console.error('Error fetching Tripay transaction detail:', error);
     throw error;
