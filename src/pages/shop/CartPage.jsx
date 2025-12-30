@@ -105,7 +105,7 @@ const CartPage = () => {
       setShowEmptyCartModal(true);
       return;
     }
-    setShowCheckoutModal(true);
+    navigate('/checkout');
   };
 
   const handleClearCart = () => {
