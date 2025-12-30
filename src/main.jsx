@@ -10,6 +10,7 @@ import Homepage from './pages/Homepage.jsx'
 import SearchPage from './pages/SearchPage.jsx'
 import ShopPage from './pages/shop/ShopPage.jsx'
 import CartPage from './pages/shop/CartPage.jsx'
+import CheckoutPage from './pages/shop/CheckoutPage.jsx'
 import ArticlePage from './pages/ariticle/ArticlePage.jsx'
 import ArticleDetail from './pages/ariticle/ArticleDetail.jsx'
 import KamarDetailPage from './pages/KamarDetailPage.jsx'
@@ -67,6 +68,7 @@ createRoot(document.getElementById('root')).render(
                 <Route path="search" element={<SearchPage />} />
                 <Route path="shop" element={<ShopPage />} />
                 <Route path="cart" element={<CartPage />} />
+                <Route path="checkout" element={<CheckoutPage />} />
                 <Route path="article" element={<ArticlePage />} />
                 <Route path="article/:id" element={<ArticleDetail />} />
                 <Route path="getKos/:kosId" element={<KosDetailPage />} />
