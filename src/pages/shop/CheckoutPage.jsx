@@ -16,10 +16,6 @@ const CheckoutPage = () => {
   const [error, setError] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  // Use Tripay hooks
-  const { data: channelsData, isLoading: channelsLoading } = usePaymentChannels();
-  const createPaymentMutation = useCreatePayment();
-
   const [formData, setFormData] = useState({
     nama: '',
     email: '',
@@ -27,9 +23,17 @@ const CheckoutPage = () => {
     payment_method: ''
   });
 
+  // Helper functions - defined first
+  const calculateSubtotal = () => getCartTotal();
+
+  // Use Tripay hooks
+  const { data: channelsData, isLoading: channelsLoading } = usePaymentChannels();
+  const createPaymentMutation = useCreatePayment();
+
   // Calculate fee based on selected payment method
   const subtotal = calculateSubtotal();
   const { fee, total } = useCalculateFee(subtotal, formData.payment_method);
+  const calculateGrandTotal = () => total || subtotal;
 
   const paymentChannels = channelsData?.data || [];
 
@@ -73,10 +77,6 @@ const CheckoutPage = () => {
     if (typeof product.gambar === 'string') return getImageUrl(product.gambar);
     return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop&q=80';
   };
-
-  const calculateSubtotal = () => getCartTotal();
-
-  const calculateGrandTotal = () => total || subtotal;
 
   const handleCheckout = async () => {
     if (!formData.nama || !formData.email || !formData.phone) {
