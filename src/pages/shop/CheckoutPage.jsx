@@ -232,12 +232,22 @@ const CheckoutPage = () => {
 
     setLoading(true);
     try {
+      // Hitung subtotal dari semua items
+      const subtotal = cartItems.reduce((sum, item) => sum + (parseInt(item.harga) * item.quantity), 0);
+      const paymentFee = getSelectedPaymentFee();
+      const grandTotal = subtotal + paymentFee;
+      
       // Untuk setiap item di cart, buat checkout
       const checkoutPromises = cartItems.map(item => {
         const checkoutData = {
           id_user: user.id,
           id_produk: item.id_produk,
           jumlah: item.quantity, // ✅ Backend expect "jumlah" (bukan "quantity")
+          harga_satuan: parseInt(item.harga), // ✅ Backend expect "harga_satuan"
+          total_harga: parseInt(item.harga) * item.quantity, // ✅ Backend expect "total_harga"
+          subtotal: subtotal, // ✅ Backend expect "subtotal" (total semua items)
+          biaya_admin: paymentFee, // ✅ Backend expect "biaya_admin" (payment fee)
+          total_bayar: grandTotal, // ✅ Backend expect "total_bayar" (subtotal + biaya_admin)
           metode_pembayaran: selectedPayment, // ✅ Backend expect "metode_pembayaran"
           nama_customer: customerInfo.name, // ✅ Backend expect "nama_customer"
           email_customer: customerInfo.email, // ✅ Backend expect "email_customer"
