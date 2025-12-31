@@ -1,6 +1,9 @@
 import { memo, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { MapPin, Home, Building, Layers, Users } from 'lucide-react';
+import { MapPin, Home, Building, Layers, Users, Calendar } from 'lucide-react';
+import { format, parseISO, isBefore, isWithinInterval } from 'date-fns';
+import { id as localeId } from 'date-fns/locale';
+import { parseKetersediaan, getNearestAvailablePeriod } from '../booking/AvailabilitySection';
 
 const BASE_URL = 'https://admin.haven.co.id';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop';
@@ -79,6 +82,48 @@ const RoomCard = memo(({ kamar, kosId, kosName, kosLocation }) => {
     ...(kamar.fasilitas?.length > 0 ? [{ icon: Users, text: `${kamar.fasilitas.length} fasilitas` }] : []),
   ];
 
+  // Get availability info
+  const getAvailabilityInfo = () => {
+    const ketersediaan = kamar.paket_harga?.ketersediaan;
+    const availabilityPeriods = parseKetersediaan(ketersediaan);
+    
+    if (!availabilityPeriods || availabilityPeriods.length === 0) {
+      return { status: 'available', label: 'Tersedia', dateText: null, badgeColor: 'bg-indigo-600' };
+    }
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Find the nearest valid period
+    const nearestPeriod = getNearestAvailablePeriod(availabilityPeriods);
+    
+    if (!nearestPeriod) {
+      return { status: 'unavailable', label: 'Tidak Tersedia', dateText: null, badgeColor: 'bg-gray-500' };
+    }
+    
+    const startDate = parseISO(nearestPeriod.start_date);
+    const endDate = parseISO(nearestPeriod.end_date);
+    const isCurrentlyActive = isWithinInterval(today, { start: startDate, end: endDate });
+    
+    if (isCurrentlyActive) {
+      return {
+        status: 'active',
+        label: 'Tersedia',
+        dateText: `Hingga ${format(endDate, 'd MMM yyyy', { locale: localeId })}`,
+        badgeColor: 'bg-green-600'
+      };
+    } else {
+      return {
+        status: 'upcoming',
+        label: 'Tersedia Mulai',
+        dateText: format(startDate, 'd MMM yyyy', { locale: localeId }),
+        badgeColor: 'bg-blue-600'
+      };
+    }
+  };
+
+  const availabilityInfo = getAvailabilityInfo();
+
   const handleClick = () => {
     const params = new URLSearchParams(searchParams);
     navigate(`/getKamar/${kosId}/kamar/${kamar.id}?${params.toString()}`);
@@ -91,8 +136,8 @@ const RoomCard = memo(({ kamar, kosId, kosName, kosLocation }) => {
     >
       {/* Image Section */}
       <div className="relative">
-        <span className="absolute top-3 left-3 z-10 bg-indigo-600 text-white text-xs font-medium px-2 py-1 rounded">
-          Tersedia
+        <span className={`absolute top-3 left-3 z-10 ${availabilityInfo.badgeColor} text-white text-xs font-medium px-2 py-1 rounded`}>
+          {availabilityInfo.label}
         </span>
         <div className="relative h-48 bg-gray-200">
           <img
@@ -116,14 +161,28 @@ const RoomCard = memo(({ kamar, kosId, kosName, kosLocation }) => {
         </div>
 
         {/* Amenities */}
-        <div className="space-y-2 mb-4">
-          {amenities.slice(0, 4).map((amenity, index) => (
+        <div className="space-y-2 mb-3">
+          {amenities.slice(0, 3).map((amenity, index) => (
             <div key={index} className="flex items-center gap-2 text-xs text-gray-600">
               <amenity.icon className="w-3 h-3" />
               <span>{amenity.text}</span>
             </div>
           ))}
         </div>
+
+        {/* Availability Date */}
+        {availabilityInfo.dateText && (
+          <div className={`flex items-center gap-2 text-xs mb-3 px-2 py-1.5 rounded-lg ${
+            availabilityInfo.status === 'active' 
+              ? 'bg-green-50 text-green-700' 
+              : availabilityInfo.status === 'upcoming' 
+                ? 'bg-blue-50 text-blue-700' 
+                : 'bg-gray-50 text-gray-600'
+          }`}>
+            <Calendar className="w-3 h-3" />
+            <span className="font-medium">{availabilityInfo.dateText}</span>
+          </div>
+        )}
 
         {/* Price */}
         <div className="text-center mb-4">
