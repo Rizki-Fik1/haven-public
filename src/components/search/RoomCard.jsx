@@ -1,8 +1,9 @@
 import { memo, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { MapPin, Home, Building, Layers, Users } from 'lucide-react';
+import { getBackendUrl } from '../../lib/utils';
 
-const BASE_URL = 'https://admin.haven.co.id';
+const BASE_URL = getBackendUrl();
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop';
 
 // Helper function to get image URL

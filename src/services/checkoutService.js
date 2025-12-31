@@ -33,7 +33,7 @@ export const createCheckout = async (checkoutData) => {
 
 /** 
  * Mendapatkan daftar metode pembayaran yang tersedia dari Tripay
- * Menggunakan backend API untuk keamanan (tidak expose API key di client)
+ * Melalui backend Laravel API
  * @returns {Promise} Daftar payment channels
  */
 export const getPaymentChannels = async () => {
