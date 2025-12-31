@@ -1,7 +1,7 @@
-// Tripay Type Definitions
+// Tripay Payment Gateway Types - Updated from production
 
 export interface TripayOrderItem {
-  sku: string;
+  sku?: string;
   name: string;
   price: number;
   quantity: number;
@@ -9,10 +9,30 @@ export interface TripayOrderItem {
   image_url?: string;
 }
 
+export interface TripayCustomer {
+  name: string;
+  email: string;
+  phone?: string;
+}
+
+export interface TripayPaymentRequest {
+  method: string;
+  merchant_ref: string;
+  amount: number;
+  customer_name: string;
+  customer_email: string;
+  customer_phone?: string;
+  order_items: TripayOrderItem[];
+  callback_url?: string;
+  return_url?: string;
+  expired_time?: number;
+  signature: string;
+}
+
 export interface TripayPaymentChannel {
   code: string;
   name: string;
-  group: string;
+  type: "virtual_account" | "ewallet" | "retail" | "qris" | "credit_card";
   fee_merchant: {
     flat: number;
     percent: number;
@@ -25,11 +45,20 @@ export interface TripayPaymentChannel {
     flat: number;
     percent: number;
   };
-  minimum_fee: number;
-  maximum_fee: number;
+  minimum_fee?: number;
+  maximum_fee?: number;
   icon_url: string;
   active: boolean;
 }
+
+export type TripayPaymentStatus = 
+  | "UNPAID" 
+  | "PAID" 
+  | "SETTLED" 
+  | "EXPIRED" 
+  | "CANCELED" 
+  | "FAILED" 
+  | "REFUND";
 
 export interface TripayPaymentData {
   reference: string;
@@ -39,7 +68,7 @@ export interface TripayPaymentData {
   payment_name: string;
   customer_name: string;
   customer_email: string;
-  customer_phone: string;
+  customer_phone?: string;
   callback_url: string;
   return_url: string;
   amount: number;
@@ -47,18 +76,20 @@ export interface TripayPaymentData {
   fee_customer: number;
   total_fee: number;
   amount_received: number;
-  pay_code: string;
-  pay_url: string;
+  pay_code?: string;
+  pay_url?: string;
   checkout_url: string;
-  status: string;
+  status: TripayPaymentStatus;
   expired_time: number;
   order_items: TripayOrderItem[];
-  instructions: Array<{
+  instructions?: Array<{
     title: string;
     steps: string[];
   }>;
   qr_code?: string;
   qr_url?: string;
+  created_at: number;
+  updated_at: number;
 }
 
 export interface TripayPaymentResponse {
@@ -76,21 +107,20 @@ export interface TripayPaymentChannelsResponse {
 export interface TripayTransactionDetailResponse {
   success: boolean;
   message: string;
-  data: {
-    reference: string;
-    merchant_ref: string;
-    payment_method: string;
-    payment_name: string;
-    customer_name: string;
-    customer_email: string;
-    customer_phone: string;
-    amount: number;
-    fee_merchant: number;
-    fee_customer: number;
-    total_fee: number;
-    amount_received: number;
-    status: string;
-    paid_at: number;
-    order_items: TripayOrderItem[];
-  };
+  data: TripayPaymentData;
+}
+
+export interface TripayCallbackPayload {
+  reference: string;
+  merchant_ref: string;
+  payment_method: string;
+  payment_method_code: string;
+  total_amount: number;
+  fee_merchant: number;
+  fee_customer: number;
+  total_fee: number;
+  amount_received: number;
+  is_closed_payment: number;
+  status: TripayPaymentStatus;
+  paid_at: number;
 }

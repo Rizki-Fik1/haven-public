@@ -9,20 +9,12 @@ import api from "./axios";
 
 /**
  * Get available payment channels from Tripay
- * Endpoint dari project lama: /api/tripay/api-sandbox
+ * Menggunakan backend API untuk keamanan (tidak expose API key di client)
  * @returns {Promise} Payment channels response
  */
 export const getTripayPaymentChannels = async () => {
   try {
-    const response = await axios.get(
-      "https://tripay.co.id/api-sandbox/merchant/payment-channel",
-      {
-        headers: {
-          Authorization: `Bearer DEV-Mw0X24wAGYwvEWoM83Mpm0OQPtLHa1PY3N6S72CI`,
-        },
-      }
-    );
-
+    const response = await api.get("/tripay/payment-channels");
     return response.data;
   } catch (error) {
     console.error("Error fetching Tripay payment channels:", error);

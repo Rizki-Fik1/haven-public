@@ -33,20 +33,12 @@ export const createCheckout = async (checkoutData) => {
 
 /** 
  * Mendapatkan daftar metode pembayaran yang tersedia dari Tripay
- * Endpoint: /tripay/api-sandbox (dari project lama)
+ * Menggunakan backend API untuk keamanan (tidak expose API key di client)
  * @returns {Promise} Daftar payment channels
  */
-export const getPaymentChannels  = async () => {
+export const getPaymentChannels = async () => {
   try {
-    const response = await api.get(
-      "https://tripay.co.id/api-sandbox/merchant/payment-channel",
-      {
-        headers: {
-          Authorization: `Bearer DEV-Mw0X24wAGYwvEWoM83Mpm0OQPtLHa1PY3N6S72CI`,
-        },
-      }
-    );
-
+    const response = await api.get("/tripay/payment-channels");
     return response.data;
   } catch (error) {
     console.error("Error fetching Tripay payment channels:", error);
