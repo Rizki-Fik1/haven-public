@@ -2,7 +2,6 @@ import { memo, useMemo, useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { getKos } from '../../services/kosService';
-import { parseKetersediaan, isDateAvailable, isDateRangeAvailable } from '../booking/AvailabilitySection';
 import KosCard from './KosCard';
 import RoomCard from './RoomCard';
 
@@ -60,38 +59,10 @@ const SearchResults = memo(() => {
     }
   }, [pagination]);
 
-  // Filter rooms by availability (if checkIn date is provided)
-  const filteredKosData = useMemo(() => {
-    const checkInDate = searchParams.get('checkIn');
-    const checkOutDate = searchParams.get('checkOut');
-    
-    if (!checkInDate) {
-      return kosData; // No filter applied
-    }
-    
-    return kosData.filter((kamar) => {
-      const ketersediaan = kamar.paket_harga?.ketersediaan;
-      const availabilityPeriods = parseKetersediaan(ketersediaan);
-      
-      // If no availability data, show the room (no restrictions)
-      if (!availabilityPeriods || availabilityPeriods.length === 0) {
-        return true;
-      }
-      
-      // Check if the entire date range is available
-      if (checkOutDate) {
-        return isDateRangeAvailable(checkInDate, checkOutDate, availabilityPeriods);
-      }
-      
-      // If no checkout date, just check the check-in date
-      return isDateAvailable(checkInDate, availabilityPeriods);
-    });
-  }, [kosData, searchParams]);
-
-  // Extract unique kos from filtered data
+  // Extract unique kos
   const uniqueKos = useMemo(() => {
     const kosMap = new Map();
-    filteredKosData.forEach((kamar) => {
+    kosData.forEach((kamar) => {
       if (kamar?.kos && kamar.kos.id && kamar.kos.nama) {
         if (!kosMap.has(kamar.kos.id)) {
           kosMap.set(kamar.kos.id, kamar.kos);
@@ -99,13 +70,13 @@ const SearchResults = memo(() => {
       }
     });
     return Array.from(kosMap.values());
-  }, [filteredKosData]);
+  }, [kosData]);
 
-  // Filter rooms for selected kos (already filtered by availability)
+  // Filter rooms for selected kos
   const roomsForKos = useMemo(() => {
     if (!selectedKos) return [];
-    return filteredKosData.filter((kamar) => kamar?.kos?.id === selectedKos?.id);
-  }, [filteredKosData, selectedKos]);
+    return kosData.filter((kamar) => kamar?.kos?.id === selectedKos?.id);
+  }, [kosData, selectedKos]);
 
   // Pagination handlers
   const handlePreviousPage = () => {
