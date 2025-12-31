@@ -1,5 +1,5 @@
 // API Configuration
-const API_URL = import.meta.env.VITE_API_URL || 'https://admin.haven.co.id/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://haven.co.id/api';
 
 /**
  * Base fetch wrapper with error handling
