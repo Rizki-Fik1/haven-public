@@ -27,7 +27,7 @@ const CheckoutPage = () => {
   const calculateSubtotal = () => getCartTotal();
 
   // Use Tripay hooks
-  const { data: channelsData, isLoading: channelsLoading } = usePaymentChannels();
+  const { data: channelsData, isLoading: channelsLoading, error: channelsError } = usePaymentChannels();
   const createPaymentMutation = useCreatePayment();
 
   // Calculate fee based on selected payment method
@@ -35,7 +35,18 @@ const CheckoutPage = () => {
   const { fee, total } = useCalculateFee(subtotal, formData.payment_method);
   const calculateGrandTotal = () => total || subtotal;
 
-  const paymentChannels = channelsData?.data || [];
+  // Fallback payment channels jika API gagal
+  const fallbackChannels = [
+    { code: 'BRIVA', name: 'BRI Virtual Account', group: 'Virtual Account', active: true, total_fee: { flat: 4000, percent: 0 } },
+    { code: 'BNIVA', name: 'BNI Virtual Account', group: 'Virtual Account', active: true, total_fee: { flat: 4000, percent: 0 } },
+    { code: 'MANDIRIVA', name: 'Mandiri Virtual Account', group: 'Virtual Account', active: true, total_fee: { flat: 4000, percent: 0 } },
+    { code: 'BCAVA', name: 'BCA Virtual Account', group: 'Virtual Account', active: true, total_fee: { flat: 4000, percent: 0 } },
+    { code: 'QRIS', name: 'QRIS', group: 'E-Wallet', active: true, total_fee: { flat: 0, percent: 0.7 } },
+    { code: 'ALFAMART', name: 'Alfamart', group: 'Convenience Store', active: true, total_fee: { flat: 2500, percent: 0 } },
+    { code: 'INDOMARET', name: 'Indomaret', group: 'Convenience Store', active: true, total_fee: { flat: 2500, percent: 0 } },
+  ];
+
+  const paymentChannels = channelsData?.data || (channelsError ? fallbackChannels : []);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -278,6 +289,14 @@ const CheckoutPage = () => {
                 <CreditCard className="text-indigo-600" size={24} />
                 <h2 className="text-xl font-bold text-gray-900">Metode Pembayaran</h2>
               </div>
+
+              {channelsError && (
+                <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800">
+                    ⚠️ Menggunakan metode pembayaran default. Untuk production, set environment variables di Vercel.
+                  </p>
+                </div>
+              )}
 
               {channelsLoading ? (
                 <div className="text-center py-8">
