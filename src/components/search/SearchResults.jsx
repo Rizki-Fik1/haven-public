@@ -3,7 +3,6 @@ import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { getKos } from '../../services/kosService';
 import KosCard from './KosCard';
-import RoomCard from './RoomCard';
 
 const SearchResults = memo(() => {
   const [searchParams] = useSearchParams();
@@ -14,7 +13,6 @@ const SearchResults = memo(() => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState(null);
-  const [selectedKos, setSelectedKos] = useState(null);
   const [pageInput, setPageInput] = useState('1');
 
   // Extract search parameters from URL
@@ -72,12 +70,6 @@ const SearchResults = memo(() => {
     return Array.from(kosMap.values());
   }, [kosData]);
 
-  // Filter rooms for selected kos
-  const roomsForKos = useMemo(() => {
-    if (!selectedKos) return [];
-    return kosData.filter((kamar) => kamar?.kos?.id === selectedKos?.id);
-  }, [kosData, selectedKos]);
-
   // Pagination handlers
   const handlePreviousPage = () => {
     if (!pagination || pagination.current_page <= 1) return;
@@ -128,38 +120,6 @@ const SearchResults = memo(() => {
     );
   }
 
-  // Show rooms list if a Kos is selected
-  if (selectedKos) {
-    return (
-      <div className="py-8">
-        <button
-          onClick={() => setSelectedKos(null)}
-          className="mb-6 text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2 hover:underline"
-        >
-          ← Kembali ke daftar kos
-        </button>
-
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">{selectedKos.nama}</h2>
-          <p className="text-gray-600">{selectedKos.alamat_kota || selectedKos.daerah?.nama}</p>
-          <p className="text-sm text-gray-500 mt-2">{roomsForKos.length} kamar tersedia</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {roomsForKos.map((kamar) => (
-            <RoomCard
-              key={kamar.id}
-              kamar={kamar}
-              kosId={selectedKos.id}
-              kosName={selectedKos.nama}
-              kosLocation={selectedKos.daerah?.nama}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   // Show Kos list
   return (
     <div className="py-8">
@@ -174,7 +134,11 @@ const SearchResults = memo(() => {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {uniqueKos.map((kos) => (
-              <KosCard key={kos.id} kos={kos} onClick={() => setSelectedKos(kos)} />
+              <KosCard 
+                key={kos.id} 
+                kos={kos} 
+                onClick={() => navigate(`/getKos/${kos.id}`)} 
+              />
             ))}
           </div>
 

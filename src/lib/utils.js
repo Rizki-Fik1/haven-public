@@ -23,13 +23,15 @@ export const getBackendUrl = () => {
  * Get full image URL from backend
  * Handles berbagai format path dan URL
  * @param {string|object} url - Image path, URL, atau object dengan property url
+ * @param {string} folder - Optional folder path (e.g., 'banners', 'products')
  * @returns {string} Full image URL
  * @example 
- * getImageUrl('uploads/image.jpg') // Returns: "https://haven.co.id/uploads/image.jpg"
+ * getImageUrl('image.jpg', 'banners') // Returns: "https://admin.haven.co.id/banners/image.jpg"
+ * getImageUrl('uploads/image.jpg') // Returns: "https://admin.haven.co.id/uploads/image.jpg"
  * getImageUrl('https://example.com/image.jpg') // Returns: "https://example.com/image.jpg"
  * getImageUrl(null) // Returns: "/placeholder.jpg"
  */
-export const getImageUrl = (url) => {
+export const getImageUrl = (url, folder = null) => {
   // Handle null/undefined
   if (!url) {
     return "/placeholder.jpg";
@@ -39,7 +41,7 @@ export const getImageUrl = (url) => {
   if (typeof url === 'object' && url !== null) {
     const imageUrl = url.url || url.path || url.url_gambar;
     if (imageUrl) {
-      return getImageUrl(imageUrl); // Recursive call
+      return getImageUrl(imageUrl, folder); // Recursive call with folder
     }
     return "/placeholder.jpg";
   }
@@ -54,6 +56,15 @@ export const getImageUrl = (url) => {
 
   // Build full URL with backend base
   const backendUrl = getBackendUrl();
+  
+  // If folder is specified and URL doesn't already include folder path
+  if (folder && !urlString.includes(`/${folder}/`)) {
+    // Remove leading slash if present
+    const cleanPath = urlString.startsWith('/') ? urlString.substring(1) : urlString;
+    return `${backendUrl}/${folder}/${cleanPath}`;
+  }
+  
+  // Default behavior: add leading slash if needed
   const cleanPath = urlString.startsWith('/') ? urlString : `/${urlString}`;
   return `${backendUrl}${cleanPath}`;
 };

@@ -15,6 +15,8 @@ import ArticlePage from './pages/ariticle/ArticlePage.jsx'
 import ArticleDetail from './pages/ariticle/ArticleDetail.jsx'
 import KamarDetailPage from './pages/KamarDetailPage.jsx'
 import KosDetailPage from './pages/KosDetailPage.jsx'
+import BookingPage from './pages/booking/BookingPage.jsx'
+import BookingSuccessPage from './pages/booking/BookingSuccessPage.jsx'
 import LoginPage from './pages/auth/LoginPage.jsx'
 import RegisterPage from './pages/auth/RegisterPage.jsx'
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage.jsx'
@@ -69,6 +71,8 @@ createRoot(document.getElementById('root')).render(
                 <Route path="article/:id" element={<ArticleDetail />} />
                 <Route path="getKos/:kosId" element={<KosDetailPage />} />
                 <Route path="getKamar/:kosId/kamar/:kamarId" element={<KamarDetailPage />} />
+                <Route path="booking" element={<BookingPage />} />
+                <Route path="booking/success" element={<BookingSuccessPage />} />
               </Route>
             </Routes>
           </AuthProvider>

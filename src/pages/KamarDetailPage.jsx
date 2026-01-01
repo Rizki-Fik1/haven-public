@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2, AlertCircle, MapPin, ArrowLeft, Building, Layers, Maximize2, Users, ChevronRight, Check, X, ChevronLeft } from 'lucide-react';
 import { getKamarDetail, getKosDetail } from '../services/kosService';
+import { useAuthContext } from '../context/AuthContext';
+import BookingSheet from '../components/booking/BookingSheet';
+import DocumentUploadModal from '../components/booking/DocumentUploadModal';
+import AvailabilitySection from '../components/booking/AvailabilitySection';
 
 const BASE_URL = 'https://admin.haven.co.id';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop';
@@ -42,6 +46,20 @@ const KamarDetailPage = () => {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  
+  // Booking states
+  const [isBookingSheetOpen, setIsBookingSheetOpen] = useState(false);
+  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  const { user, isAuthenticated } = useAuthContext();
+  
+  // Handle responsive
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchKamarDetail = async () => {
@@ -77,6 +95,48 @@ const KamarDetailPage = () => {
 
   const handleBack = () => {
     navigate(`/search?${searchParams.toString()}`);
+  };
+
+  // Handle booking click
+  const handleBookingClick = () => {
+    // 1. Check authentication
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    
+    // 2. Check documents (KTP & Selfie)
+    const hasKtp = user?.gambarktp && user.gambarktp.trim() !== '';
+    const hasSelfie = user?.fotoselfie && user.fotoselfie.trim() !== '';
+    
+    if (!hasKtp || !hasSelfie) {
+      setIsDocumentModalOpen(true);
+      return;
+    }
+    
+    // 3. Open BookingSheet (mobile) or redirect to /booking (desktop)
+    const duration = searchParams.get('duration') || '1-month';
+    const checkIn = searchParams.get('checkIn') || new Date().toISOString().split('T')[0];
+    const checkOut = searchParams.get('checkOut') || '';
+    
+    if (isMobile) {
+      setIsBookingSheetOpen(true);
+    } else {
+      navigate(`/booking?kosId=${kosId}&kamarId=${kamarId}&checkIn=${checkIn}&checkOut=${checkOut}&duration=${duration}`);
+    }
+  };
+  
+  const handleDocumentUploadSuccess = () => {
+    // After successful document upload, open booking
+    const duration = searchParams.get('duration') || '1-month';
+    const checkIn = searchParams.get('checkIn') || new Date().toISOString().split('T')[0];
+    const checkOut = searchParams.get('checkOut') || '';
+    
+    if (isMobile) {
+      setIsBookingSheetOpen(true);
+    } else {
+      navigate(`/booking?kosId=${kosId}&kamarId=${kamarId}&checkIn=${checkIn}&checkOut=${checkOut}&duration=${duration}`);
+    }
   };
 
   // Get images
@@ -355,6 +415,9 @@ const KamarDetailPage = () => {
               </div>
             )}
 
+            {/* Availability Section */}
+            <AvailabilitySection ketersediaan={kamar?.paket_harga?.ketersediaan} />
+
             {/* Location Section */}
             {(kamar.lokasi_kos || kamar.kos?.daerah?.nama || kosDetail?.link_maps || kamar.kos?.link_maps) && (
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -434,7 +497,10 @@ const KamarDetailPage = () => {
                 )}
 
                 {/* CTA Button */}
-                <button className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4">
+                <button 
+                  onClick={handleBookingClick}
+                  className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
+                >
                   Pesan Sekarang
                 </button>
 
@@ -496,6 +562,23 @@ const KamarDetailPage = () => {
           </button>
         </div>
       )}
+
+      {/* Booking Sheet (Mobile) */}
+      <BookingSheet
+        isOpen={isBookingSheetOpen}
+        onClose={() => setIsBookingSheetOpen(false)}
+        kamarData={kamar}
+        kosData={kosDetail}
+        initialCheckIn={searchParams.get('checkIn') ? new Date(searchParams.get('checkIn')) : new Date()}
+        initialDuration={searchParams.get('duration') || '1-month'}
+      />
+
+      {/* Document Upload Modal */}
+      <DocumentUploadModal
+        isOpen={isDocumentModalOpen}
+        onClose={() => setIsDocumentModalOpen(false)}
+        onSuccess={handleDocumentUploadSuccess}
+      />
     </div>
   );
 };

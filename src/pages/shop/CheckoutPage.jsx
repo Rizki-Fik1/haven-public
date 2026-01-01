@@ -30,7 +30,6 @@ const CheckoutPage = () => {
   // Check authentication and redirect if not logged in
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      alert('Silakan login terlebih dahulu untuk melakukan checkout');
       navigate('/login', { state: { from: '/checkout' } });
     }
   }, [authLoading, isAuthenticated, navigate]);
