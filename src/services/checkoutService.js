@@ -40,7 +40,7 @@ export const createCheckout = async (checkoutData) => {
 export const getPaymentChannels = async () => {
   try {
     // Langsung fetch ke haven.co.id tanpa axios instance
-    const response = await fetch('https://haven.co.id/api/payment-channel', {
+    const response = await fetch('https://haven.co.id/api/tripay/payment-channels', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
