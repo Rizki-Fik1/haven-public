@@ -34,12 +34,25 @@ export const createCheckout = async (checkoutData) => {
 /** 
  * Mendapatkan daftar metode pembayaran yang tersedia dari Tripay
  * Melalui backend Laravel API
+ * KHUSUS: Langsung hit ke haven.co.id tanpa melalui axios instance
  * @returns {Promise} Daftar payment channels
  */
 export const getPaymentChannels = async () => {
   try {
-    const response = await api.get("/tripay/payment-channels");
-    return response.data;
+    // Langsung fetch ke haven.co.id tanpa axios instance
+    const response = await fetch('https://haven.co.id/api/payment-channel', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error fetching Tripay payment channels:", error);
     throw error;
