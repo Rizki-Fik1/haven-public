@@ -180,7 +180,7 @@ const BookingInformation = ({
                   value={format(checkInDate, 'yyyy-MM-dd')}
                   min={format(new Date(), 'yyyy-MM-dd')}
                   onChange={(e) => setCheckInDate(new Date(e.target.value))}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
             </div>
@@ -194,7 +194,7 @@ const BookingInformation = ({
                 <button
                   type="button"
                   onClick={() => setShowDurationPicker(!showDurationPicker)}
-                  className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-indigo-500 transition-colors"
+                  className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-green-500 transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <Clock className="w-5 h-5 text-gray-400" />
@@ -226,7 +226,7 @@ const BookingInformation = ({
                             setShowDurationPicker(false);
                           }}
                           className={`w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors ${
-                            duration === option.value ? 'bg-indigo-50 text-indigo-600' : ''
+                            duration === option.value ? 'bg-green-50 text-green-600' : ''
                           }`}
                         >
                           <span>{option.label}</span>
@@ -243,17 +243,17 @@ const BookingInformation = ({
           </div>
 
           {/* Check-out Display */}
-          <div className={`mt-4 rounded-xl p-4 ${isBookingDatesValid ? 'bg-indigo-50' : 'bg-red-50 border border-red-200'}`}>
+          <div className={`mt-4 rounded-xl p-4 ${isBookingDatesValid ? 'bg-green-50' : 'bg-red-50 border border-red-200'}`}>
             <div className="flex justify-between items-center">
               <div>
-                <p className={`text-sm font-medium ${isBookingDatesValid ? 'text-indigo-600' : 'text-red-600'}`}>Check-Out</p>
-                <p className={`font-semibold ${isBookingDatesValid ? 'text-indigo-900' : 'text-red-900'}`}>
+                <p className={`text-sm font-medium ${isBookingDatesValid ? 'text-green-600' : 'text-red-600'}`}>Check-Out</p>
+                <p className={`font-semibold ${isBookingDatesValid ? 'text-green-900' : 'text-red-900'}`}>
                   {format(checkOutDate, 'd MMMM yyyy', { locale: localeId })}
                 </p>
               </div>
               <div className="text-right">
-                <p className={`text-sm font-medium ${isBookingDatesValid ? 'text-indigo-600' : 'text-red-600'}`}>Durasi</p>
-                <p className={`font-semibold ${isBookingDatesValid ? 'text-indigo-900' : 'text-red-900'}`}>
+                <p className={`text-sm font-medium ${isBookingDatesValid ? 'text-green-600' : 'text-red-600'}`}>Durasi</p>
+                <p className={`font-semibold ${isBookingDatesValid ? 'text-green-900' : 'text-red-900'}`}>
                   {DURATION_OPTIONS.find(d => d.value === duration)?.label}
                 </p>
               </div>
@@ -290,7 +290,7 @@ const BookingInformation = ({
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="Masukkan nama lengkap"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
             </div>
@@ -307,7 +307,7 @@ const BookingInformation = ({
                     value={guestEmail}
                     onChange={(e) => setGuestEmail(e.target.value)}
                     placeholder="Masukkan email"
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   />
                 </div>
               </div>
@@ -323,7 +323,7 @@ const BookingInformation = ({
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
                     placeholder="Masukkan nomor telepon"
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   />
                 </div>
               </div>
@@ -336,7 +336,7 @@ const BookingInformation = ({
       <div className="lg:col-span-1">
         <div className="bg-white rounded-2xl shadow-lg sticky top-24 overflow-hidden border border-gray-100">
           {/* Price Header */}
-          <div className="bg-gradient-to-br from-indigo-600 via-indigo-600 to-indigo-700 p-6 text-white">
+          <div className="bg-gradient-to-br from-green-600 via-green-600 to-green-700 p-6 text-white">
             <p className="text-sm font-medium opacity-90 mb-2">Total Pembayaran</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
@@ -376,7 +376,7 @@ const BookingInformation = ({
               className={`w-full font-bold py-4 rounded-xl transition-all duration-300 shadow-md ${
                 hasAvailabilityRestriction && !isBookingDatesValid
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white hover:shadow-lg'
+                  : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white hover:shadow-lg'
               }`}
             >
               {hasAvailabilityRestriction && !isBookingDatesValid 

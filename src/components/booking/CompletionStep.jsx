@@ -110,10 +110,10 @@ const CompletionStep = ({
           </div>
 
           {/* Price */}
-          <div className="bg-indigo-50 rounded-xl p-4">
+          <div className="bg-green-50 rounded-xl p-4">
             <div className="flex justify-between items-center">
-              <span className="text-indigo-600 font-medium">Total Pembayaran</span>
-              <span className="text-xl font-bold text-indigo-700">
+              <span className="text-green-600 font-medium">Total Pembayaran</span>
+              <span className="text-xl font-bold text-green-700">
                 Rp {Number(bookingData?.price)?.toLocaleString('id-ID') || '0'}
               </span>
             </div>
@@ -143,7 +143,7 @@ const CompletionStep = ({
           {/* View Transactions */}
           <Link
             to="/transaksi"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
             Lihat Transaksi Saya
             <ArrowRight className="w-5 h-5" />

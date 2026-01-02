@@ -172,8 +172,8 @@ const BookingSheet = ({
             <p className="text-gray-600 mb-4">
               Nomor pesanan Anda:
             </p>
-            <div className="bg-indigo-50 rounded-xl p-4 mb-6">
-              <p className="text-2xl font-bold text-indigo-600 font-mono">
+            <div className="bg-green-50 rounded-xl p-4 mb-6">
+              <p className="text-2xl font-bold text-green-600 font-mono">
                 {orderNumber}
               </p>
             </div>
@@ -182,7 +182,7 @@ const BookingSheet = ({
             </p>
             <button
               onClick={handleClose}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl transition-colors"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors"
             >
               Tutup
             </button>
@@ -233,7 +233,7 @@ const BookingSheet = ({
               <button
                 type="button"
                 onClick={() => setShowCalendar(!showCalendar)}
-                className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-indigo-500 transition-colors"
+                className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-green-500 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-gray-400" />
@@ -270,7 +270,7 @@ const BookingSheet = ({
               <button
                 type="button"
                 onClick={() => setShowDurationPicker(!showDurationPicker)}
-                className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-indigo-500 transition-colors"
+                className="w-full flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-left hover:border-green-500 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   <Clock className="w-5 h-5 text-gray-400" />
@@ -302,7 +302,7 @@ const BookingSheet = ({
                           setShowDurationPicker(false);
                         }}
                         className={`w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors ${
-                          duration === option.value ? 'bg-indigo-50 text-indigo-600' : ''
+                          duration === option.value ? 'bg-green-50 text-green-600' : ''
                         }`}
                       >
                         <span>{option.label}</span>
@@ -318,9 +318,9 @@ const BookingSheet = ({
           </div>
 
           {/* Check-out Date Display */}
-          <div className={`rounded-xl p-4 ${isBookingDatesValid ? 'bg-indigo-50' : 'bg-red-50 border border-red-200'}`}>
-            <p className={`text-sm font-medium mb-1 ${isBookingDatesValid ? 'text-indigo-600' : 'text-red-600'}`}>Check-Out:</p>
-            <p className={`font-semibold ${isBookingDatesValid ? 'text-indigo-900' : 'text-red-900'}`}>
+          <div className={`rounded-xl p-4 ${isBookingDatesValid ? 'bg-green-50' : 'bg-red-50 border border-red-200'}`}>
+            <p className={`text-sm font-medium mb-1 ${isBookingDatesValid ? 'text-green-600' : 'text-red-600'}`}>Check-Out:</p>
+            <p className={`font-semibold ${isBookingDatesValid ? 'text-green-900' : 'text-red-900'}`}>
               {format(checkOutDate, 'd MMMM yyyy', { locale: localeId })}
             </p>
           </div>
@@ -358,7 +358,7 @@ const BookingSheet = ({
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="Masukkan nama lengkap"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
             </div>
@@ -372,7 +372,7 @@ const BookingSheet = ({
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
                   placeholder="Masukkan email"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
             </div>
@@ -386,7 +386,7 @@ const BookingSheet = ({
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
                   placeholder="Masukkan nomor telepon"
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
               </div>
             </div>
@@ -416,7 +416,7 @@ const BookingSheet = ({
             className={`w-full font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 ${
               hasAvailabilityRestriction && !isBookingDatesValid
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white'
+                : 'bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white'
             }`}
           >
             {(createBookingMutation.isPending || updateProfileMutation.isPending) ? (

@@ -136,7 +136,7 @@ const PaymentStep = ({
         {/* Payment Method */}
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-indigo-600" />
+            <CreditCard className="w-5 h-5 text-green-600" />
             Metode Pembayaran
           </h3>
 
@@ -148,7 +148,7 @@ const PaymentStep = ({
                 onClick={() => setSelectedBank(bank)}
                 className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${
                   selectedBank.id === bank.id
-                    ? 'border-indigo-500 bg-indigo-50'
+                    ? 'border-green-500 bg-green-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
@@ -159,7 +159,7 @@ const PaymentStep = ({
                 </div>
                 {selectedBank.id === bank.id && (
                   <div className="ml-auto">
-                    <div className="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center">
+                    <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
                       <Check className="w-4 h-4 text-white" />
                     </div>
                   </div>
@@ -187,7 +187,7 @@ const PaymentStep = ({
               </div>
               <button
                 onClick={handleCopyAccountNumber}
-                className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
               >
                 {copied ? (
                   <>
@@ -215,19 +215,19 @@ const PaymentStep = ({
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Instruksi Pembayaran</h3>
           <ol className="space-y-3 text-gray-600">
             <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-semibold">1</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold">1</span>
               <span>Transfer ke rekening {selectedBank.name} dengan nominal yang tertera</span>
             </li>
             <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-semibold">2</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold">2</span>
               <span>Simpan bukti transfer Anda</span>
             </li>
             <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-semibold">3</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold">3</span>
               <span>Konfirmasi pembayaran melalui WhatsApp admin</span>
             </li>
             <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-sm font-semibold">4</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm font-semibold">4</span>
               <span>Tunggu konfirmasi dari admin (1x24 jam)</span>
             </li>
           </ol>
@@ -238,7 +238,7 @@ const PaymentStep = ({
       <div className="lg:col-span-1">
         <div className="bg-white rounded-2xl shadow-lg sticky top-24 overflow-hidden border border-gray-100">
           {/* Price Header */}
-          <div className="bg-gradient-to-br from-indigo-600 via-indigo-600 to-indigo-700 p-6 text-white">
+          <div className="bg-gradient-to-br from-green-600 via-green-600 to-green-700 p-6 text-white">
             <p className="text-sm font-medium opacity-90 mb-2">Total Pembayaran</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
@@ -302,7 +302,7 @@ const PaymentStep = ({
             <button
               onClick={handleConfirmPayment}
               disabled={createBookingMutation.isPending || updateProfileMutation.isPending}
-              className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-4"
+              className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-4"
             >
               {(createBookingMutation.isPending || updateProfileMutation.isPending) ? (
                 <>
