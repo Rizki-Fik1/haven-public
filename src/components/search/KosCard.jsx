@@ -41,7 +41,7 @@ const KosCard = memo(({ kos, onClick }) => {
 
   return (
     <div
-      className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-200"
+      className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-200 flex flex-col"
       onClick={onClick}
     >
       <div className="relative h-48 bg-gray-200">
@@ -62,20 +62,22 @@ const KosCard = memo(({ kos, onClick }) => {
         )}
       </div>
 
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-1">
         <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
           {kos.nama}
         </h3>
         <p className="text-sm text-gray-600 mb-3">
           {kos.alamat_kota || kos.daerah?.nama}
         </p>
-        {kos.keterangan && (
+        {kos.keterangan ? (
           <p
-            className="text-xs text-gray-500 mb-4 line-clamp-2"
+            className="text-xs text-gray-500 mb-4 line-clamp-2 min-h-[2.5rem]"
             dangerouslySetInnerHTML={{ __html: kos.keterangan }}
           />
+        ) : (
+          <div className="mb-4 min-h-[2.5rem]"></div>
         )}
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-auto">
           Lihat Kamar
         </button>
       </div>

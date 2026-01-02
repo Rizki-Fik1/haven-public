@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { 
+  Share2, 
+  X, 
+  Facebook, 
+  Linkedin, 
+  MessageCircle,
+  Link as LinkIcon,
+  Check
+} from 'lucide-react';
 import { getArticleById } from '../../services/articleService';
 import ErrorAlert from '../../components/ui/ErrorAlert';
 
@@ -9,6 +18,16 @@ const ArticleDetail = () => {
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Handle responsive
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -45,6 +64,69 @@ const ArticleDetail = () => {
       month: 'long', 
       year: 'numeric' 
     });
+  };
+
+  // Get current page URL
+  const getArticleUrl = () => {
+    return window.location.href;
+  };
+
+  // Generate share text
+  const getShareText = () => {
+    return `${article?.judul || 'Artikel Menarik'} - Haven`;
+  };
+
+  // Copy link to clipboard
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(getArticleUrl());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  // Share handlers
+  const shareToFacebook = () => {
+    const url = encodeURIComponent(getArticleUrl());
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+  };
+
+  const shareToTwitter = () => {
+    const url = encodeURIComponent(getArticleUrl());
+    const text = encodeURIComponent(getShareText());
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+  };
+
+  const shareToLinkedIn = () => {
+    const url = encodeURIComponent(getArticleUrl());
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
+  };
+
+  const shareToWhatsApp = () => {
+    const url = encodeURIComponent(getArticleUrl());
+    const text = encodeURIComponent(getShareText());
+    window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
+  };
+
+  // Native share API (for mobile)
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: article?.judul || 'Artikel Haven',
+          text: getShareText(),
+          url: getArticleUrl(),
+        });
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
+      }
+    } else {
+      setShowShareModal(true);
+    }
   };
 
   if (loading) {
@@ -94,17 +176,31 @@ const ArticleDetail = () => {
       </button>
 
       <article>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">{article.judul}</h1>
-        
-        <div className="flex items-center gap-4 text-gray-500 mb-6">
-          <span>{formatDate(article.created_at)}</span>
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-            article.status === 'published' 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-gray-100 text-gray-600'
-          }`}>
-            {article.status}
-          </span>
+        {/* Header with Title and Share Button */}
+        <div className="mb-6">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{article.judul}</h1>
+          
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4 text-gray-500">
+              <span>{formatDate(article.created_at)}</span>
+              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                article.status === 'published' 
+                  ? 'bg-green-100 text-green-800' 
+                  : 'bg-gray-100 text-gray-600'
+              }`}>
+                {article.status}
+              </span>
+            </div>
+
+            {/* Share Button */}
+            <button
+              onClick={isMobile ? handleNativeShare : () => setShowShareModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors shadow-sm"
+            >
+              <Share2 className="w-4 h-4" />
+              <span className="font-medium">Bagikan</span>
+            </button>
+          </div>
         </div>
 
         {article.thumbnail && (
@@ -122,6 +218,110 @@ const ArticleDetail = () => {
           dangerouslySetInnerHTML={{ __html: article.isi }}
         />
       </article>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-60 z-[9999] flex items-center justify-center p-4"
+          onClick={() => setShowShareModal(false)}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowShareModal(false)}
+              className="absolute -top-3 -right-3 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors z-10"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+
+            {/* Modal Header */}
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-xl font-semibold text-gray-900 text-center">Bagikan Artikel</h3>
+              <p className="text-sm text-gray-500 text-center mt-1 line-clamp-1">
+                {article.judul}
+              </p>
+            </div>
+
+            {/* Modal Content - Grid Layout */}
+            <div className="p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                {/* WhatsApp */}
+                <button
+                  onClick={shareToWhatsApp}
+                  className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <MessageCircle className="w-7 h-7 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">WhatsApp</span>
+                </button>
+
+                {/* Facebook */}
+                <button
+                  onClick={shareToFacebook}
+                  className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Facebook className="w-7 h-7 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">Facebook</span>
+                </button>
+
+                {/* X (Twitter) */}
+                <button
+                  onClick={shareToTwitter}
+                  className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">X</span>
+                </button>
+
+                {/* LinkedIn */}
+                <button
+                  onClick={shareToLinkedIn}
+                  className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <div className="w-14 h-14 bg-blue-700 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Linkedin className="w-7 h-7 text-white" />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">LinkedIn</span>
+                </button>
+
+                {/* Copy Link */}
+                <button
+                  onClick={copyToClipboard}
+                  className="flex flex-col items-center gap-2 p-4 hover:bg-gray-50 rounded-xl transition-colors group col-span-2 sm:col-span-1"
+                >
+                  <div className="w-14 h-14 bg-gray-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    {copied ? (
+                      <Check className="w-7 h-7 text-white" />
+                    ) : (
+                      <LinkIcon className="w-7 h-7 text-white" />
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">
+                    {copied ? 'Tersalin!' : 'Salin Link'}
+                  </span>
+                </button>
+              </div>
+
+              {/* URL Preview */}
+              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <p className="text-xs text-gray-500 text-center truncate">
+                  {getArticleUrl()}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

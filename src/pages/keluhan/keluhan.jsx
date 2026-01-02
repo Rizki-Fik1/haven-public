@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import api from '../../services/axios';
+import { getImageUrl } from '../../lib/utils';
 import ProtectedRoute from '../../components/auth/ProtectedRoute';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import {
@@ -137,25 +138,38 @@ const KeluhanPage = memo(() => {
       return;
     }
 
+    if (!user?.id) {
+      showToast('User ID tidak ditemukan. Silakan login ulang.', 'error');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       // Create FormData for multipart upload
       const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
+      formData.append('title', title.trim());
+      formData.append('description', description.trim());
       formData.append('category', category);
       formData.append('user_id', user.id.toString());
 
+      // Append image if exists
       if (image) {
-        formData.append('image', image);
+        formData.append('image', image, image.name);
+        console.log('Uploading image:', image.name, 'Size:', image.size, 'Type:', image.type);
       }
 
-      const response = await api.post('/tickets', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      // Debug: Log FormData contents
+      console.log('FormData contents:');
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+      // Axios will automatically set Content-Type for FormData
+      // Don't manually set it to let axios add boundary parameter
+      const response = await api.post('/tickets', formData);
+
+      console.log('Ticket submission response:', response.data);
 
       if (response.data.success || response.data) {
         showToast('Keluhan/saran berhasil dikirim');
@@ -167,10 +181,11 @@ const KeluhanPage = memo(() => {
         setShowForm(false);
         
         // Refresh tickets list
-        fetchTickets();
+        await fetchTickets();
       }
     } catch (err) {
       console.error('Failed to submit ticket:', err);
+      console.error('Error response:', err.response?.data);
       showToast(err.response?.data?.message || 'Gagal mengirim keluhan', 'error');
     } finally {
       setIsSubmitting(false);
@@ -227,6 +242,41 @@ const KeluhanPage = memo(() => {
           minute: '2-digit',
         })
       : '';
+  };
+
+  // Helper function to get ticket image URL
+  const getTicketImageUrl = (ticket) => {
+    if (!ticket.image) return null;
+    
+    // If image is already a full URL
+    if (ticket.image.startsWith('http://') || ticket.image.startsWith('https://')) {
+      console.log('Image is full URL:', ticket.image);
+      return ticket.image;
+    }
+    
+    // Get backend base URL
+    const backendUrl = import.meta.env.VITE_API_URL?.replace(/\/api$/, '') || 'https://haven.co.id';
+    
+    // If image path already includes 'storage/' or 'tickets/'
+    if (ticket.image.includes('storage/') || ticket.image.includes('tickets/')) {
+      const cleanPath = ticket.image.startsWith('/') ? ticket.image : `/${ticket.image}`;
+      const fullUrl = `${backendUrl}${cleanPath}`;
+      console.log('Image with storage path:', ticket.image, '→', fullUrl);
+      return fullUrl;
+    }
+    
+    // Backend saves to: public/img/tickets/{user_id}/{filename}
+    // Construct URL with user_id from ticket
+    if (ticket.user_id) {
+      const fullUrl = `${backendUrl}/img/tickets/${ticket.user_id}/${ticket.image}`;
+      console.log('Image with user_id:', ticket.user_id, ticket.image, '→', fullUrl);
+      return fullUrl;
+    }
+    
+    // Fallback: try without user_id (might not work for this backend)
+    const fullUrl = `${backendUrl}/img/tickets/${ticket.image}`;
+    console.log('Image fallback (no user_id):', ticket.image, '→', fullUrl);
+    return fullUrl;
   };
 
   // Loading state
@@ -435,11 +485,17 @@ const KeluhanPage = memo(() => {
                         {ticket.description || ticket.pesan || ticket.isi}
                       </p>
                       {ticket.image && (
-                        <img
-                          src={ticket.image}
-                          alt="Lampiran"
-                          className="mt-3 w-full h-32 object-cover rounded-lg"
-                        />
+                        <div className="mt-3">
+                          <img
+                            src={getTicketImageUrl(ticket)}
+                            alt="Lampiran"
+                            className="w-full h-32 object-cover rounded-lg"
+                            onError={(e) => {
+                              console.error('Failed to load image:', ticket.image);
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        </div>
                       )}
                       {(ticket.reply || ticket.balasan) && (
                         <div className="mt-3 pt-3 border-t border-gray-100">
@@ -653,11 +709,18 @@ const KeluhanPage = memo(() => {
                         {ticket.description || ticket.pesan || ticket.isi}
                       </p>
                       {ticket.image && (
-                        <img
-                          src={ticket.image}
-                          alt="Lampiran"
-                          className="mt-3 max-w-xs h-32 object-cover rounded-lg"
-                        />
+                        <div className="mt-3">
+                          <img
+                            src={getTicketImageUrl(ticket)}
+                            alt="Lampiran"
+                            className="max-w-xs h-32 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                            onClick={() => window.open(getTicketImageUrl(ticket), '_blank')}
+                            onError={(e) => {
+                              console.error('Failed to load image:', ticket.image);
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        </div>
                       )}
                       {(ticket.reply || ticket.balasan) && (
                         <div className="mt-4 pt-4 border-t border-gray-100 bg-gray-50 -mx-4 -mb-4 p-4 rounded-b-lg">

@@ -200,7 +200,7 @@ const ShopPage = () => {
                 {filteredProducts.map((product) => (
                   <div
                     key={product.id_produk}
-                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
                   >
                     <div className="relative h-48">
                       <img
@@ -212,17 +212,20 @@ const ShopPage = () => {
                         }}
                       />
                     </div>
-                    <div className="p-4">
+                    <div className="p-4 flex flex-col flex-1">
                       <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
                         {product.judul_produk}
                       </h3>
                       {product.deskripsi && (
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2 min-h-[2.5rem]">
                           {product.deskripsi}
                         </p>
                       )}
+                      {!product.deskripsi && (
+                        <div className="mb-3 min-h-[2.5rem]"></div>
+                      )}
                       
-                      <div className="flex flex-col gap-3 mt-4">
+                      <div className="flex flex-col gap-3 mt-auto">
                         <div className="text-xl font-bold text-gray-900">
                           Rp {parseInt(product.harga).toLocaleString('id-ID')}
                         </div>
