@@ -47,6 +47,8 @@ export const getPaymentChannels = async () => {
       },
     });
 
+    console.log("debug", response);
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
