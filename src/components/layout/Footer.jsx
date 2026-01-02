@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone, MdLocationOn, MdAccessTime } from 'react-icons/md';
-import logo from '../../assets/images/logo_22.png';
+import logo from '../../assets/images/haven.png';
 
 const Footer = () => {
   const footerLinks = {

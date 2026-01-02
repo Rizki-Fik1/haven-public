@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { getCartItemCount } from "../../lib/cartUtils";
 import { useAuthContext } from "../../context/AuthContext";
 import { User, LogOut, ChevronDown, Calendar, CreditCard } from "lucide-react";
+import logo from '../../assets/images/haven.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ const Header = () => {
             onClick={handleLogoClick}
           >
             <img 
-              src="src/assets/images/haven.png" 
+              src={logo} 
               alt="Haven Logo" 
               className="h-16 sm:h-16 w-auto object-contain"
             />
