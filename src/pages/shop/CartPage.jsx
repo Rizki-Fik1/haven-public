@@ -188,7 +188,7 @@ const CartPage = () => {
         <div className="mb-8">
           <button
             onClick={() => navigate('/shop')}
-            className="mb-4 text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2 transition-colors"
+            className="mb-4 text-green-700 hover:text-green-800 font-medium flex items-center gap-2 transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Kembali ke Toko</span>
@@ -207,7 +207,7 @@ const CartPage = () => {
             <p className="text-gray-600 mb-6">Belum ada produk di keranjang Anda</p>
             <button
               onClick={() => navigate('/shop')}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+              className="bg-green-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-800 transition-colors"
             >
               Mulai Belanja
             </button>
@@ -243,7 +243,7 @@ const CartPage = () => {
                       <h3 className="font-bold text-gray-900 mb-1">
                         {item.judul_produk}
                       </h3>
-                      <p className="text-indigo-600 font-semibold mb-3">
+                      <p className="text-green-700 font-semibold mb-3">
                         Rp {price.toLocaleString('id-ID')}
                       </p>
 
@@ -315,14 +315,14 @@ const CartPage = () => {
 
                 <button
                   onClick={handleCheckout}
-                  className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg"
+                  className="w-full bg-green-700 text-white py-3 rounded-lg font-semibold hover:bg-green-800 transition-colors shadow-md hover:shadow-lg"
                 >
                   Checkout
                 </button>
 
                 <button
                   onClick={() => navigate('/shop')}
-                  className="w-full mt-3 bg-white text-indigo-600 py-3 rounded-lg font-semibold border-2 border-indigo-600 hover:bg-indigo-50 transition-colors"
+                  className="w-full mt-3 bg-white text-green-700 py-3 rounded-lg font-semibold border-2 border-green-700 hover:bg-green-50 transition-colors"
                 >
                   Lanjut Belanja
                 </button>
@@ -336,3 +336,4 @@ const CartPage = () => {
 };
 
 export default CartPage;
+

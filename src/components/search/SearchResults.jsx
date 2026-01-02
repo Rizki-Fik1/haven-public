@@ -103,7 +103,7 @@ const SearchResults = memo(() => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-green-700" />
           <p className="text-gray-600">Mencari kos yang tersedia...</p>
         </div>
       </div>
@@ -162,7 +162,7 @@ const SearchResults = memo(() => {
                     max={pagination.last_page}
                     value={pageInput}
                     onChange={(e) => setPageInput(e.target.value)}
-                    className="w-14 text-center px-1 bg-transparent outline-none border-b border-gray-300 focus:border-indigo-600"
+                    className="w-14 text-center px-1 bg-transparent outline-none border-b border-gray-300 focus:border-green-700"
                   />
                 </form>
                 <span className="text-gray-600">dari {pagination.last_page}</span>
@@ -196,3 +196,4 @@ const SearchResults = memo(() => {
 SearchResults.displayName = 'SearchResults';
 
 export default SearchResults;
+

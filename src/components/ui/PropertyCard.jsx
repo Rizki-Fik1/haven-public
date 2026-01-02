@@ -33,7 +33,7 @@ const PropertyCard = ({ property }) => {
       <div className="relative">
         {/* Availability Badge */}
         {property.availability && (
-          <span className="absolute top-3 left-3 z-10 bg-indigo-600 text-white text-xs font-medium px-2 py-1 rounded">
+          <span className="absolute top-3 left-3 z-10 bg-green-600 text-white text-xs font-medium px-2 py-1 rounded">
             Tersedia
           </span>
         )}
@@ -122,7 +122,7 @@ const PropertyCard = ({ property }) => {
         {/* CTA Button */}
         <button 
           onClick={handleViewRoom}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition-colors cursor-pointer"
+          className="w-full bg-green-600 hover:bg-green-800 text-white font-medium py-2 rounded-lg transition-colors cursor-pointer"
         >
           Lihat Kamar
         </button>

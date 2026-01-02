@@ -234,7 +234,7 @@ const SearchBar = () => {
             <button
               type="button"
               onClick={() => setShowLocationDropdown(!showLocationDropdown)}
-              className="w-full py-3 md:py-[13px] px-11 md:px-12 pr-10 md:pr-11 border-[1.5px] border-gray-200 rounded-lg text-[15px] text-left transition-all duration-200 bg-white focus:outline-none focus:border-indigo-600 focus:shadow-[0_0_0_4px_rgba(79,70,229,0.1)]"
+              className="w-full py-3 md:py-[13px] px-11 md:px-12 pr-10 md:pr-11 border-[1.5px] border-gray-200 rounded-lg text-[15px] text-left transition-all duration-200 bg-white focus:outline-none focus:border-green-700 focus:shadow-[0_0_0_4px_rgba(21,128,61,0.1)]"
             >
               <span className={selectedLocation ? 'text-gray-900 font-medium' : 'text-gray-400'}>
                 {selectedLocation ? selectedLocation.nama : 'Pilih Lokasi'}
@@ -259,7 +259,7 @@ const SearchBar = () => {
                           setShowLocationDropdown(false);
                         }}
                         className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all duration-200 ${
-                          !selectedLocationId ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'
+                          !selectedLocationId ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'
                         }`}
                       >
                         Semua Lokasi
@@ -273,7 +273,7 @@ const SearchBar = () => {
                             setShowLocationDropdown(false);
                           }}
                           className={`w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all duration-200 ${
-                            selectedLocationId === location.id ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'
+                            selectedLocationId === location.id ? 'bg-green-50 text-green-700 font-semibold' : 'text-gray-700 hover:bg-gray-50'
                           }`}
                         >
                           {location.nama}
@@ -300,7 +300,7 @@ const SearchBar = () => {
             <button
               type="button"
               onClick={() => setShowCheckInCalendar(!showCheckInCalendar)}
-              className="w-full py-3 md:py-[13px] px-11 md:px-12 pr-10 md:pr-11 border-[1.5px] border-gray-200 rounded-lg text-[15px] text-left transition-all duration-200 bg-white focus:outline-none focus:border-indigo-600 focus:shadow-[0_0_0_4px_rgba(79,70,229,0.1)]"
+              className="w-full py-3 md:py-[13px] px-11 md:px-12 pr-10 md:pr-11 border-[1.5px] border-gray-200 rounded-lg text-[15px] text-left transition-all duration-200 bg-white focus:outline-none focus:border-green-700 focus:shadow-[0_0_0_4px_rgba(21,128,61,0.1)]"
             >
               <span className={checkIn ? 'text-gray-900 font-medium' : 'text-gray-400'}>
                 {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: id }) : 'Check In'}
@@ -373,9 +373,9 @@ const SearchBar = () => {
                             className={`
                               aspect-square p-2 text-sm rounded-lg transition-all duration-200
                               ${!isCurrentMonth ? 'text-gray-300' : ''}
-                              ${isSelected ? 'bg-indigo-600 text-white font-bold shadow-md' : ''}
-                              ${isToday && !isSelected ? 'border-2 border-indigo-600 text-indigo-600 font-semibold' : ''}
-                              ${!isSelected && !isToday && isCurrentMonth && !isPast ? 'hover:bg-indigo-50 text-gray-700' : ''}
+                              ${isSelected ? 'bg-green-700 text-white font-bold shadow-md' : ''}
+                              ${isToday && !isSelected ? 'border-2 border-green-700 text-green-700 font-semibold' : ''}
+                              ${!isSelected && !isToday && isCurrentMonth && !isPast ? 'hover:bg-green-50 text-gray-700' : ''}
                               ${isPast ? 'text-gray-300 cursor-not-allowed' : 'cursor-pointer'}
                             `}
                           >
@@ -393,7 +393,7 @@ const SearchBar = () => {
                       onClick={() => {
                         handleSelectCheckIn(today);
                       }}
-                      className="flex-1 px-3 py-2 text-xs font-medium text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                      className="flex-1 px-3 py-2 text-xs font-medium text-green-700 hover:bg-green-50 rounded-lg transition-colors"
                     >
                       Hari ini
                     </button>
@@ -421,8 +421,8 @@ const SearchBar = () => {
                         }} 
                         className={`text-xs px-4 py-2 rounded-lg border-[1.5px] transition-all duration-200 font-medium ${
                           selectedDuration === '' 
-                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' 
-                            : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-indigo-50'
+                            ? 'bg-green-700 text-white border-green-700 shadow-sm' 
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-green-50'
                         }`}
                       >
                         Semua
@@ -437,8 +437,8 @@ const SearchBar = () => {
                           }} 
                           className={`text-xs px-4 py-2 rounded-lg border-[1.5px] transition-all duration-200 font-medium ${
                             selectedDuration === option.value 
-                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' 
-                              : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-indigo-50'
+                              ? 'bg-green-700 text-white border-green-700 shadow-sm' 
+                              : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-green-50'
                           }`}
                         >
                           {option.label}
@@ -473,7 +473,7 @@ const SearchBar = () => {
         {/* Filter Button - Desktop */}
         <div 
           onClick={() => setShowSettings(!showSettings)} 
-          className="hidden md:block py-[13px] px-5 border-[1.5px] border-gray-200 rounded-lg bg-white cursor-pointer transition-all duration-200 text-gray-500 text-[15px] font-medium hover:border-indigo-600 hover:bg-gray-50 hover:text-indigo-600 relative"
+          className="hidden md:block py-[13px] px-5 border-[1.5px] border-gray-200 rounded-lg bg-white cursor-pointer transition-all duration-200 text-gray-500 text-[15px] font-medium hover:border-green-700 hover:bg-gray-50 hover:text-green-700 relative"
         >
           <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
             <path d="M4 6H16M6 10H14M8 14H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
@@ -485,18 +485,18 @@ const SearchBar = () => {
                 <div className="mb-4">
                   <label className="text-md font-semibold text-gray-700 mb-2 block">Tipe Kos</label>
                   <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => setSelectedTipe('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === '' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>Semua</button>
+                    <button type="button" onClick={() => setSelectedTipe('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === '' ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>Semua</button>
                     {tipeKosOptions.map((tipe) => (
-                      <button key={tipe.id} type="button" onClick={() => setSelectedTipe(tipe.nama)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === tipe.nama ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>{tipe.nama}</button>
+                      <button key={tipe.id} type="button" onClick={() => setSelectedTipe(tipe.nama)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === tipe.nama ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>{tipe.nama}</button>
                     ))}
                   </div>
                 </div>
                 <div>
                   <label className="text-md font-semibold text-gray-700 mb-2 block">Jenis Kos</label>
                   <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => setSelectedJenis('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === '' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>Semua</button>
+                    <button type="button" onClick={() => setSelectedJenis('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === '' ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>Semua</button>
                     {jenisKosOptions.map((jenis) => (
-                      <button key={jenis} type="button" onClick={() => setSelectedJenis(jenis)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === jenis ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>{jenis}</button>
+                      <button key={jenis} type="button" onClick={() => setSelectedJenis(jenis)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === jenis ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>{jenis}</button>
                     ))}
                   </div>
                 </div>
@@ -508,7 +508,7 @@ const SearchBar = () => {
         {/* Filter Button - Mobile */}
         <div 
           onClick={() => setShowSettings(!showSettings)} 
-          className="md:hidden py-3.5 px-4 border-[1.5px] border-gray-200 rounded-lg bg-white flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 text-gray-500 text-[15px] font-medium hover:border-indigo-600 hover:bg-gray-50 hover:text-indigo-600 relative"
+          className="md:hidden py-3.5 px-4 border-[1.5px] border-gray-200 rounded-lg bg-white flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 text-gray-500 text-[15px] font-medium hover:border-green-700 hover:bg-gray-50 hover:text-green-700 relative"
         >
           <span>Filter</span>
           <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
@@ -521,18 +521,18 @@ const SearchBar = () => {
                 <div className="mb-4">
                   <label className="text-xs font-semibold text-gray-700 mb-2 block">Tipe Kos</label>
                   <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => setSelectedTipe('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === '' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>Semua</button>
+                    <button type="button" onClick={() => setSelectedTipe('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === '' ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>Semua</button>
                     {tipeKosOptions.map((tipe) => (
-                      <button key={tipe.id} type="button" onClick={() => setSelectedTipe(tipe.nama)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === tipe.nama ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>{tipe.nama}</button>
+                      <button key={tipe.id} type="button" onClick={() => setSelectedTipe(tipe.nama)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedTipe === tipe.nama ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>{tipe.nama}</button>
                     ))}
                   </div>
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-gray-700 mb-2 block">Jenis Kos</label>
                   <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => setSelectedJenis('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === '' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>Semua</button>
+                    <button type="button" onClick={() => setSelectedJenis('')} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === '' ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>Semua</button>
                     {jenisKosOptions.map((jenis) => (
-                      <button key={jenis} type="button" onClick={() => setSelectedJenis(jenis)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === jenis ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-600 hover:bg-gray-50'}`}>{jenis}</button>
+                      <button key={jenis} type="button" onClick={() => setSelectedJenis(jenis)} className={`text-xs px-3 py-1.5 rounded-lg border-[1.5px] transition-all duration-200 ${selectedJenis === jenis ? 'bg-green-700 text-white border-green-700' : 'bg-white text-gray-700 border-gray-200 hover:border-green-700 hover:bg-gray-50'}`}>{jenis}</button>
                     ))}
                   </div>
                 </div>
@@ -542,7 +542,7 @@ const SearchBar = () => {
         </div>
 
         {/* Search Button */}
-        <button onClick={handleSearch} className="w-full md:w-auto py-3.5 md:py-[13px] px-10 bg-gradient-to-br from-indigo-500 to-indigo-600 text-white border-none rounded-lg text-[16px] font-semibold cursor-pointer transition-all duration-300 shadow-[0_4px_12px_rgba(79,70,229,0.3)] hover:bg-gradient-to-br hover:from-indigo-600 hover:to-indigo-700 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(79,70,229,0.4)] active:translate-y-0">
+        <button onClick={handleSearch} className="w-full md:w-auto py-3.5 md:py-[13px] px-10 bg-gradient-to-br from-green-600 to-green-700 text-white border-none rounded-lg text-[16px] font-semibold cursor-pointer transition-all duration-300 shadow-[0_4px_12px_rgba(21,128,61,0.3)] hover:bg-gradient-to-br hover:from-green-700 hover:to-green-800 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(21,128,61,0.4)] active:translate-y-0">
           Cari
         </button>
       </div>
@@ -551,3 +551,4 @@ const SearchBar = () => {
 };
 
 export default SearchBar;
+

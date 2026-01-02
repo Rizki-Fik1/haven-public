@@ -78,7 +78,7 @@ const ArticlePage = () => {
 
         {loading && (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
           </div>
         )}
 
@@ -113,7 +113,7 @@ const ArticlePage = () => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-4 left-4">
-                  <span className="bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  <span className="bg-green-800 text-white text-xs font-semibold px-3 py-1 rounded-full">
                     {getCategoryFromStatus(article.status)}
                   </span>
                 </div>
@@ -126,7 +126,7 @@ const ArticlePage = () => {
                 <p className="text-gray-600 text-sm line-clamp-3">
                   {stripHtml(article.isi).substring(0, 150)}...
                 </p>
-                <button className="mt-4 text-indigo-600 font-semibold text-sm hover:text-indigo-700">
+                <button className="mt-4 text-green-600 font-semibold text-sm hover:text-indigo-700">
                   Baca Selengkapnya →
                 </button>
               </div>

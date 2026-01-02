@@ -61,7 +61,7 @@ const LifestyleSection = () => {
     return (
       <section className="w-full bg-[#fff9f2] py-12 px-4">
         <div className="max-w-7xl mx-auto flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700"></div>
         </div>
       </section>
     );

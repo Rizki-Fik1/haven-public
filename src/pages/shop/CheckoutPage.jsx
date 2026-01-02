@@ -348,7 +348,7 @@ const CheckoutPage = () => {
       <div className="container mx-auto px-4 max-w-7xl">
         <button
           onClick={() => navigate('/cart')}
-          className="mb-6 text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2 transition-colors"
+          className="mb-6 text-green-700 hover:text-green-800 font-medium flex items-center gap-2 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Kembali ke Keranjang</span>
@@ -372,7 +372,7 @@ const CheckoutPage = () => {
                     type="text"
                     value={customerInfo.name}
                     onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-transparent bg-gray-50"
                     placeholder="Masukkan nama lengkap"
                     readOnly
                   />
@@ -386,7 +386,7 @@ const CheckoutPage = () => {
                     type="email"
                     value={customerInfo.email}
                     onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-transparent bg-gray-50"
                     placeholder="email@example.com"
                     readOnly
                   />
@@ -400,7 +400,7 @@ const CheckoutPage = () => {
                     type="tel"
                     value={customerInfo.phone}
                     onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-600 focus:border-transparent"
                     placeholder="081234567890"
                   />
                 </div>
@@ -432,7 +432,7 @@ const CheckoutPage = () => {
                       <p className="text-gray-500 text-sm mb-1">
                         {item.quantity} x Rp {parseInt(item.harga).toLocaleString('id-ID')}
                       </p>
-                      <p className="text-indigo-600 font-bold">
+                      <p className="text-green-700 font-bold">
                         Rp {(parseInt(item.harga) * item.quantity).toLocaleString('id-ID')}
                       </p>
                     </div>
@@ -447,7 +447,7 @@ const CheckoutPage = () => {
               
               {loadingPaymentChannels ? (
                 <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mx-auto"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
                   <p className="mt-2 text-gray-500">Loading payment methods...</p>
                 </div>
               ) : paymentError ? (
@@ -480,8 +480,8 @@ const CheckoutPage = () => {
                               onClick={() => setSelectedPayment(channel.code)}
                               className={`p-4 border-2 rounded-lg cursor-pointer transition-all flex items-center justify-between ${
                                 selectedPayment === channel.code
-                                  ? 'border-indigo-500 bg-indigo-50'
-                                  : 'border-gray-200 hover:border-indigo-300'
+                                  ? 'border-green-600 bg-green-50'
+                                  : 'border-gray-200 hover:border-green-400'
                               }`}
                             >
                               <div className="flex items-center space-x-3">
@@ -529,7 +529,7 @@ const CheckoutPage = () => {
                 <div className="border-t pt-2 mt-2">
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span className="text-indigo-600">
+                    <span className="text-green-700">
                       Rp {calculateGrandTotal().toLocaleString('id-ID')}
                     </span>
                   </div>
@@ -543,7 +543,7 @@ const CheckoutPage = () => {
                 className={`w-full mt-6 py-4 rounded-lg font-semibold text-white transition-all ${
                   loading || cartItems.length === 0 || !selectedPayment
                     ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-indigo-600 hover:bg-indigo-700 active:scale-95 shadow-md hover:shadow-lg'
+                    : 'bg-green-700 hover:bg-green-800 active:scale-95 shadow-md hover:shadow-lg'
                 }`}
               >
                 {loading ? 'Processing...' : 'Checkout Sekarang'}
@@ -558,3 +558,4 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+

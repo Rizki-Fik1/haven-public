@@ -92,7 +92,7 @@ const RoomCard = memo(({ kamar, kosId, kosName, kosLocation }) => {
     >
       {/* Image Section */}
       <div className="relative">
-        <span className="absolute top-3 left-3 z-10 bg-indigo-600 text-white text-xs font-medium px-2 py-1 rounded">
+        <span className="absolute top-3 left-3 z-10 bg-green-700 text-white text-xs font-medium px-2 py-1 rounded">
           Tersedia
         </span>
         <div className="relative h-48 bg-gray-200">
@@ -140,7 +140,7 @@ const RoomCard = memo(({ kamar, kosId, kosName, kosLocation }) => {
         </div>
 
         {/* CTA Button */}
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition-colors">
+        <button className="w-full bg-green-700 hover:bg-green-800 text-white font-medium py-2 rounded-lg transition-colors">
           Lihat Detail Kamar
         </button>
       </div>
@@ -151,3 +151,4 @@ const RoomCard = memo(({ kamar, kosId, kosName, kosLocation }) => {
 RoomCard.displayName = 'RoomCard';
 
 export default RoomCard;
+
