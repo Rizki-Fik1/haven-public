@@ -114,7 +114,7 @@ const CompletionStep = ({
             <div className="flex justify-between items-center">
               <span className="text-indigo-600 font-medium">Total Pembayaran</span>
               <span className="text-xl font-bold text-indigo-700">
-                Rp {bookingData?.price?.toLocaleString('id-ID') || '0'}
+                Rp {Number(bookingData?.price)?.toLocaleString('id-ID') || '0'}
               </span>
             </div>
           </div>

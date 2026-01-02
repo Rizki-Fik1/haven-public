@@ -231,7 +231,7 @@ const BookingInformation = ({
                         >
                           <span>{option.label}</span>
                           <span className="text-sm text-gray-500">
-                            Rp {priceForDuration?.toLocaleString('id-ID')}
+                            Rp {Number(priceForDuration)?.toLocaleString('id-ID')}
                           </span>
                         </button>
                       );
@@ -340,7 +340,7 @@ const BookingInformation = ({
             <p className="text-sm font-medium opacity-90 mb-2">Total Pembayaran</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
-                Rp {displayPrice.price?.toLocaleString('id-ID') || '0'}
+                Rp {Number(displayPrice.price)?.toLocaleString('id-ID') || '0'}
               </span>
               <span className="text-base font-medium opacity-90">{displayPrice.label}</span>
             </div>

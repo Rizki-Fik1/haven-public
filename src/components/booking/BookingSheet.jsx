@@ -307,7 +307,7 @@ const BookingSheet = ({
                       >
                         <span>{option.label}</span>
                         <span className="text-sm text-gray-500">
-                          Rp {priceForDuration?.toLocaleString('id-ID')}
+                          Rp {Number(priceForDuration)?.toLocaleString('id-ID')}
                         </span>
                       </button>
                     );
@@ -400,7 +400,7 @@ const BookingSheet = ({
             <span className="text-gray-600">Total Pembayaran</span>
             <div className="text-right">
               <span className="text-xl font-bold text-gray-900">
-                Rp {displayPrice.price?.toLocaleString('id-ID') || '0'}
+                Rp {Number(displayPrice.price)?.toLocaleString('id-ID') || '0'}
               </span>
               <span className="text-sm text-gray-500">{displayPrice.label}</span>
             </div>
