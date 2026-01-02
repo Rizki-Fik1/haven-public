@@ -515,6 +515,32 @@ const CheckoutPage = () => {
             {/* Order Summary */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-4">Ringkasan Pesanan</h2>
+              
+              {/* Transaction Date */}
+              <div className="bg-gray-50 rounded-lg p-3 mb-4 border border-gray-200">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">Tanggal Transaksi</span>
+                  <span className="font-medium text-gray-900">
+                    {new Date().toLocaleDateString('id-ID', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-1">
+                  <span className="text-gray-600">Waktu</span>
+                  <span className="font-medium text-gray-900">
+                    {new Date().toLocaleTimeString('id-ID', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit'
+                    })} WIB
+                  </span>
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
