@@ -107,6 +107,11 @@ const PropertyCard = ({ property }) => {
 
         {/* Price */}
         <div className="text-center mb-4">
+          {property.originalPrice && (
+            <div className="text-xs text-gray-400 line-through mb-1">
+              IDR {Number(property.originalPrice).toLocaleString('id-ID')}
+            </div>
+          )}
           <div>
             <span className="text-xs text-gray-500">IDR </span>
             <span className="text-lg font-bold text-gray-900">{Number(property.price).toLocaleString('id-ID')}</span>
@@ -117,7 +122,7 @@ const PropertyCard = ({ property }) => {
         {/* CTA Button */}
         <button 
           onClick={handleViewRoom}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition-colors cursor-pointer"
+          className="w-full bg-green-600 hover:bg-green-800 text-white font-medium py-2 rounded-lg transition-colors cursor-pointer"
         >
           Lihat Kamar
         </button>

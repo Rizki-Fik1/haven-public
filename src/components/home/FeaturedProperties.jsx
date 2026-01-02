@@ -109,7 +109,7 @@ const FeaturedProperties = () => {
     return (
       <section className="w-full bg-[#FFF8F0] py-12 md:py-12 px-4">
         <div className="max-w-7xl mx-auto flex justify-center items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700"></div>
         </div>
       </section>
     );
@@ -166,7 +166,7 @@ const FeaturedProperties = () => {
                       className="w-full h-[200px] object-cover block"
                     />
                   </div>
-                  <h3 className="mt-3 px-0 md:px-0 text-base font-semibold text-gray-900 hover:text-indigo-600 transition-colors">{property.name}</h3>
+                  <h3 className="mt-3 px-0 md:px-0 text-base font-semibold text-gray-900 hover:text-green-700 transition-colors">{property.name}</h3>
                 </div>
               ))}
             </div>

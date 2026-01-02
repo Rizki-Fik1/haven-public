@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { getCartItemCount } from "../../lib/cartUtils";
 import { useAuthContext } from "../../context/AuthContext";
 import { User, LogOut, ChevronDown, Calendar, CreditCard } from "lucide-react";
+import logo from '../../assets/images/haven.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -86,25 +87,11 @@ const Header = () => {
             className="cursor-pointer flex items-center transition-opacity duration-200 hover:opacity-80" 
             onClick={handleLogoClick}
           >
-            <svg
-              width="80"
-              height="32"
-              viewBox="0 0 100 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="sm:w-[100px] sm:h-[40px]"
-            >
-              <text
-                x="0"
-                y="30"
-                fill="#4F46E5"
-                fontSize="28"
-                fontWeight="600"
-                fontFamily="Arial, sans-serif"
-              >
-                HAVEN
-              </text>
-            </svg>
+            <img 
+              src={logo} 
+              alt="Haven Logo" 
+              className="h-16 sm:h-16 w-auto object-contain"
+            />
           </div>
 
           {/* Desktop Navigation */}
@@ -112,7 +99,7 @@ const Header = () => {
             <button
               className={`bg-transparent border-none text-[15px] font-medium py-2.5 px-4 xl:px-5 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap ${
                 isActive('/') 
-                  ? 'bg-indigo-50 text-indigo-600' 
+                  ? 'bg-green-50 text-green-700' 
                   : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
               }`}
               onClick={() => handleNavigation("/")}
@@ -123,7 +110,7 @@ const Header = () => {
             <button 
               className={`bg-transparent border-none text-[15px] font-medium py-2.5 px-4 xl:px-5 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap ${
                 isActive('/search') 
-                  ? 'bg-indigo-50 text-indigo-600' 
+                  ? 'bg-green-50 text-green-700' 
                   : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
               }`}
               onClick={() => handleNavigation("/search")}
@@ -134,7 +121,7 @@ const Header = () => {
             <button 
               className={`bg-transparent border-none text-[15px] font-medium py-2.5 px-4 xl:px-5 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap ${
                 isActive('/shop') 
-                  ? 'bg-indigo-50 text-indigo-600' 
+                  ? 'bg-green-50 text-green-700' 
                   : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
               }`}
               onClick={() => handleNavigation("/shop")}
@@ -145,7 +132,7 @@ const Header = () => {
             <button 
               className={`bg-transparent border-none text-[15px] font-medium py-2.5 px-4 xl:px-5 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap ${
                 isActive('/article') 
-                  ? 'bg-indigo-50 text-indigo-600' 
+                  ? 'bg-green-50 text-green-700' 
                   : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
               }`}
               onClick={() => handleNavigation("/article")}
@@ -262,7 +249,7 @@ const Header = () => {
               </div>
             ) : (
               <button
-                className="bg-indigo-600 text-white text-[15px] font-semibold py-2.5 px-5 xl:px-6 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap hover:bg-indigo-700 ml-2"
+                className="bg-green-700 text-white text-[15px] font-semibold py-2.5 px-5 xl:px-6 cursor-pointer rounded-3xl transition-all duration-200 whitespace-nowrap hover:bg-green-800 ml-2"
                 onClick={handleLogin}
               >
                 Login
@@ -325,7 +312,7 @@ const Header = () => {
               {/* User Info (if logged in) */}
               {isAuthenticated && user && (
                 <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-lg mb-2">
-                  <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-semibold">
+                  <div className="w-10 h-10 rounded-full bg-green-700 flex items-center justify-center text-white font-semibold">
                     {user.nama?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -338,7 +325,7 @@ const Header = () => {
               <button
                 className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${
                   isActive('/') 
-                    ? 'bg-indigo-50 text-indigo-600' 
+                    ? 'bg-green-50 text-green-700' 
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => handleNavigation("/")}
@@ -348,7 +335,7 @@ const Header = () => {
               <button
                 className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${
                   isActive('/search') 
-                    ? 'bg-indigo-50 text-indigo-600' 
+                    ? 'bg-green-50 text-green-700' 
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => handleNavigation("/search")}
@@ -358,7 +345,7 @@ const Header = () => {
               <button
                 className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${
                   isActive('/shop') 
-                    ? 'bg-indigo-50 text-indigo-600' 
+                    ? 'bg-green-50 text-green-700' 
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => handleNavigation("/shop")}
@@ -368,7 +355,7 @@ const Header = () => {
               <button
                 className={`text-left px-4 py-3 rounded-lg font-medium transition-colors ${
                   isActive('/article') 
-                    ? 'bg-indigo-50 text-indigo-600' 
+                    ? 'bg-green-50 text-green-700' 
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => handleNavigation("/article")}
@@ -387,7 +374,7 @@ const Header = () => {
                 </button>
               ) : (
                 <button
-                  className="text-left px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors mt-2"
+                  className="text-left px-4 py-3 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800 transition-colors mt-2"
                   onClick={handleLogin}
                 >
                   Login

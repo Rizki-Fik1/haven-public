@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { MdEmail, MdPhone, MdLocationOn, MdAccessTime } from 'react-icons/md';
-import logo from '../../assets/images/logo_22.png';
+import logo from '../../assets/images/haven.png';
 
 const Footer = () => {
   const footerLinks = {
@@ -19,10 +19,10 @@ const Footer = () => {
       { label: 'Careers', to: '/careers' }
     ],
     contact: [
-      { icon: <MdEmail className="text-indigo-400" size={18} />, text: 'hello@haven.com' },
-      { icon: <MdPhone className="text-indigo-400" size={18} />, text: '+62 812 3456 7890' },
-      { icon: <MdLocationOn className="text-indigo-400" size={18} />, text: 'Jakarta, Indonesia' },
-      { icon: <MdAccessTime className="text-indigo-400" size={18} />, text: '24/7 Customer Support' }
+      { icon: <MdEmail className="text-green-400" size={18} />, text: 'hello@haven.com' },
+      { icon: <MdPhone className="text-green-400" size={18} />, text: '+62 812 3456 7890' },
+      { icon: <MdLocationOn className="text-green-400" size={18} />, text: 'Jakarta, Indonesia' },
+      { icon: <MdAccessTime className="text-green-400" size={18} />, text: '24/7 Customer Support' }
     ]
   };
 
@@ -67,9 +67,9 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full bg-gray-800 text-gray-200 pt-20 pb-8 px-6">
+    <footer className="w-full bg-gradient-to-br from-green-900 to-gray-800 text-gray-200 pt-20 pb-8 px-6">
       <div className="max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_2.5fr] gap-12 lg:gap-20 pb-12 border-b border-gray-700">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_2.5fr] gap-12 lg:gap-20 pb-12 border-b border-green-900/30">
           <div className="flex flex-col gap-5">
             <img 
               src={logo} 
@@ -77,11 +77,11 @@ const Footer = () => {
               className="rounded max-w-48" 
             />
             <p className="text-[15px] leading-relaxed text-gray-400 m-0">
-              Platform apartemen dan penginapan terbaik untuk kenyamanan liburan anda.
+              Platform co-living terpercaya untuk menemukan hunian impian Anda di seluruh Indonesia.
             </p>
             <div className="flex gap-3 mt-2">
               {socialLinks.map((social) => (
-                <button key={social.name} className="w-10 h-10 rounded-full bg-gray-700 border-none text-gray-400 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-indigo-600 hover:text-white hover:-translate-y-0.5" onClick={social.onClick} aria-label={social.name}>
+                <button key={social.name} className="w-10 h-10 rounded-full bg-green-900/40 border border-green-800/50 text-gray-400 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-green-700 hover:border-green-600 hover:text-white hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-900/50" onClick={social.onClick} aria-label={social.name}>
                   {social.icon}
                 </button>
               ))}
@@ -94,7 +94,7 @@ const Footer = () => {
               <ul className="list-none p-0 m-0 flex flex-col gap-3">
                 {footerLinks.quickLinks.map((link, index) => (
                   <li key={index}>
-                    <Link to={link.to} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600 no-underline">{link.label}</Link>
+                    <Link to={link.to} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-green-400 no-underline">{link.label}</Link>
                   </li>
                 ))}
               </ul>
@@ -105,7 +105,7 @@ const Footer = () => {
               <ul className="list-none p-0 m-0 flex flex-col gap-3">
                 {footerLinks.siteLinks.map((link, index) => (
                   <li key={index}>
-                    <Link to={link.to} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-indigo-600 no-underline">{link.label}</Link>
+                    <Link to={link.to} className="bg-transparent border-none text-gray-400 text-[15px] cursor-pointer transition-colors duration-200 text-left p-0 hover:text-green-400 no-underline">{link.label}</Link>
                   </li>
                 ))}
               </ul>

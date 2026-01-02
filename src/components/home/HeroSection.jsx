@@ -95,7 +95,7 @@ const HeroSection = () => {
     return (
       <section className="relative w-full h-[70vh] min-h-[500px] max-h-[700px] md:min-h-[450px] md:h-[60vh] sm:min-h-[350px] sm:h-[50vh] xs:min-h-[300px] xs:h-[45vh] flex items-center justify-center bg-gray-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
           <p className="text-gray-600">Memuat banner...</p>
         </div>
       </section>
@@ -120,7 +120,7 @@ const HeroSection = () => {
   // No banners available
   if (banners.length === 0) {
     return (
-      <section className="relative w-full h-[70vh] min-h-[500px] max-h-[700px] md:min-h-[450px] md:h-[60vh] sm:min-h-[350px] sm:h-[50vh] xs:min-h-[300px] xs:h-[45vh] flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600">
+      <section className="relative w-full h-[70vh] min-h-[500px] max-h-[700px] md:min-h-[450px] md:h-[60vh] sm:min-h-[350px] sm:h-[50vh] xs:min-h-[300px] xs:h-[45vh] flex items-center justify-center bg-gradient-to-r from-green-600 to-green-800">
         <div className="text-center text-white px-4">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Welcome to Haven</h1>
           <p className="text-xl md:text-2xl">Find your perfect co-living space</p>

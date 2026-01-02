@@ -168,7 +168,7 @@ const ShopPage = () => {
                 onClick={() => setSelectedCategory(category.id)}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                   selectedCategory === category.id
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-green-700 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -181,7 +181,7 @@ const ShopPage = () => {
         {/* Loading State */}
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700"></div>
           </div>
         ) : (
           <>
@@ -200,7 +200,7 @@ const ShopPage = () => {
                 {filteredProducts.map((product) => (
                   <div
                     key={product.id_produk}
-                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
+                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col"
                   >
                     <div className="relative h-48">
                       <img
@@ -212,17 +212,20 @@ const ShopPage = () => {
                         }}
                       />
                     </div>
-                    <div className="p-4">
+                    <div className="p-4 flex flex-col flex-1">
                       <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]">
                         {product.judul_produk}
                       </h3>
                       {product.deskripsi && (
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        <p className="text-sm text-gray-600 mb-3 line-clamp-2 min-h-[2.5rem]">
                           {product.deskripsi}
                         </p>
                       )}
+                      {!product.deskripsi && (
+                        <div className="mb-3 min-h-[2.5rem]"></div>
+                      )}
                       
-                      <div className="flex flex-col gap-3 mt-4">
+                      <div className="flex flex-col gap-3 mt-auto">
                         <div className="text-xl font-bold text-gray-900">
                           Rp {parseInt(product.harga).toLocaleString('id-ID')}
                         </div>
@@ -230,7 +233,7 @@ const ShopPage = () => {
                         {isInCart(product.id_produk) ? (
                           <button 
                             onClick={handleViewCart}
-                            className="w-full bg-green-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                            className="w-full bg-gray-400 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
                           >
                             <Check className="w-4 h-4" />
                             Lihat Keranjang
@@ -239,7 +242,7 @@ const ShopPage = () => {
                           <button 
                             onClick={() => handleAddToCart(product)}
                             disabled={addingToCart === product.id_produk}
-                            className="w-full bg-indigo-600 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full bg-green-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-green-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                           >
                             {addingToCart === product.id_produk ? (
                               <>
@@ -268,3 +271,4 @@ const ShopPage = () => {
 };
 
 export default ShopPage;
+

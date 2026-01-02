@@ -1,14 +1,67 @@
+import { useState, useEffect } from 'react';
 import communityImage from '../../assets/images/image.png';
+import { getFasilitas } from '../../services/fasilitasService';
+
+const BASE_URL = 'https://admin.haven.co.id';
 
 const CommunityFeatures = () => {
-  const features = [
-    { icon: '/icons/sofa.svg', label: 'fully furnished' },
-    { icon: '/icons/spray.svg', label: 'housekeeping' },
-    { icon: '/icons/paper.svg', label: 'flexible contracts' },
-    { icon: '/icons/wifi.svg', label: 'super fast wifi' },
-    { icon: '/icons/maintenance.svg', label: 'maintenance' },
-    { icon: '/icons/events.svg', label: 'events & perks' },
-  ];
+  const [features, setFeatures] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Helper function to get image URL
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) {
+      return null;
+    }
+    
+    // If already full URL
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // For relative path like "fasilitas/1767338533_6957722526a8b.jpeg"
+    // Files are stored in Laravel's public folder, so we access them directly
+    // Remove backslashes and build full URL
+    const cleanPath = imagePath.replace(/\\/g, '/');
+    return `${BASE_URL}/${cleanPath}`;
+  };
+
+  useEffect(() => {
+    const fetchFasilitas = async () => {
+      try {
+        setLoading(true);
+        const response = await getFasilitas();
+        
+        let fasilitasData = null;
+        
+        if (Array.isArray(response)) {
+          fasilitasData = response;
+        } else if (response.data && Array.isArray(response.data)) {
+          fasilitasData = response.data;
+        } else if (response.data?.data && Array.isArray(response.data.data)) {
+          fasilitasData = response.data.data;
+        }
+        
+        if (Array.isArray(fasilitasData) && fasilitasData.length > 0) {
+          const transformedFeatures = fasilitasData.slice(0, 6).map(fasilitas => ({
+            image: getImageUrl(fasilitas.image),
+            label: fasilitas.nama || 'Fasilitas'
+          }));
+          
+          setFeatures(transformedFeatures);
+        } else {
+          setFeatures([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch fasilitas:', error);
+        setFeatures([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFasilitas();
+  }, []);
 
   return (
     <section className="w-full py-12 md:py-8 px-4 bg-white">
@@ -39,16 +92,38 @@ const CommunityFeatures = () => {
 
         {/* Middle Features List - Order 3 on mobile, 2 on tablet */}
         <div className="order-3 md:order-2 lg:order-2 lg:col-span-1 flex flex-col gap-4">
-          {features.map((item, index) => (
-            <div key={index} className="flex items-start gap-3 sm:gap-4">
-              <img 
-                src={item.icon} 
-                alt={item.label}
-                className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 mt-0.5 object-contain"
-              />
-              <span className="text-gray-600 text-base sm:text-lg leading-relaxed">{item.label}</span>
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-700"></div>
             </div>
-          ))}
+          ) : (
+            features.map((item, index) => (
+              <div key={index} className="flex items-start gap-3 sm:gap-4">
+                <div className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 mt-0.5 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                  {item.image ? (
+                    <img 
+                      src={item.image} 
+                      alt={item.label}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        // Fallback to checkmark icon if image fails to load
+                        e.target.style.display = 'none';
+                        const parent = e.target.parentElement;
+                        parent.classList.remove('bg-gray-100');
+                        parent.classList.add('bg-green-100');
+                        parent.innerHTML = '<svg class="w-4 h-4 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>';
+                      }}
+                    />
+                  ) : (
+                    <svg className="w-4 h-4 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  )}
+                </div>
+                <span className="text-gray-600 text-base sm:text-lg leading-relaxed">{item.label}</span>
+              </div>
+            ))
+          )}
         </div>
 
       </div>
