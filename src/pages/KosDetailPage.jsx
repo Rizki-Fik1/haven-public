@@ -84,7 +84,7 @@ const KosDetailPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-green-600" />
           <p className="text-gray-600">Memuat detail kos...</p>
         </div>
       </div>
@@ -108,7 +108,7 @@ const KosDetailPage = () => {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="mb-4 text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2 transition-colors"
+          className="mb-4 text-green-600 hover:text-green-700 font-medium flex items-center gap-2 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Kembali ke beranda</span>
@@ -191,7 +191,7 @@ const KosDetailPage = () => {
                 {kos.link_maps && (
                   <button
                     onClick={() => window.open(kos.link_maps, '_blank')}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
                   >
                     <MapPin className="w-5 h-5" />
                     Buka di Google Maps
@@ -204,7 +204,7 @@ const KosDetailPage = () => {
           {/* Right Column - Info Card */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg sticky top-24 overflow-hidden border border-gray-100">
-              <div className="bg-gradient-to-br from-indigo-600 via-indigo-600 to-indigo-700 p-6 text-white">
+              <div className="bg-gradient-to-br from-green-600 via-green-600 to-green-700 p-6 text-white">
                 <h3 className="text-xl font-bold mb-2">{kos.nama}</h3>
                 <p className="text-sm opacity-90">{kos.alamat_kota || kos.daerah?.nama}</p>
               </div>
@@ -222,8 +222,8 @@ const KosDetailPage = () => {
                   </div>
                 )}
 
-                <div className="bg-indigo-50 rounded-xl p-4 text-center border border-indigo-100">
-                  <p className="text-xs text-indigo-900 font-medium leading-relaxed">
+                <div className="bg-green-50 rounded-xl p-4 text-center border border-green-100">
+                  <p className="text-xs text-green-900 font-medium leading-relaxed">
                     Hubungi kami untuk informasi lebih lanjut dan ketersediaan kamar
                   </p>
                 </div>

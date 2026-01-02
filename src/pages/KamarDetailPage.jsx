@@ -230,7 +230,7 @@ const KamarDetailPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-green-600" />
           <p className="text-gray-600">Memuat detail kamar...</p>
         </div>
       </div>
@@ -254,7 +254,7 @@ const KamarDetailPage = () => {
         {/* Back Button */}
         <button
           onClick={handleBack}
-          className="mb-4 text-indigo-600 hover:text-indigo-700 font-medium flex items-center gap-2 transition-colors"
+          className="mb-4 text-green-600 hover:text-green-700 font-medium flex items-center gap-2 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Kembali ke hasil pencarian</span>
@@ -262,7 +262,7 @@ const KamarDetailPage = () => {
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm mb-6">
-          <span className="text-indigo-600 font-semibold hover:underline cursor-pointer">
+          <span className="text-green-600 font-semibold hover:underline cursor-pointer">
             {kamar.kos?.daerah?.nama || 'Lokasi'}
           </span>
           <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -276,7 +276,7 @@ const KamarDetailPage = () => {
           </h1>
           <div className="flex flex-wrap items-center gap-3">
             {kamar.jenis_kos && (
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-semibold border border-indigo-100">
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-50 text-green-700 rounded-full text-sm font-semibold border border-green-100">
                 <Users className="w-4 h-4" />
                 {kamar.jenis_kos}
               </span>
@@ -326,7 +326,7 @@ const KamarDetailPage = () => {
                     <div
                       key={index}
                       className={`relative h-[145px] md:h-[246px] cursor-pointer rounded-xl overflow-hidden transition-all group ${
-                        selectedImage === index ? 'ring-2 ring-indigo-500' : 'hover:opacity-80'
+                        selectedImage === index ? 'ring-2 ring-green-500' : 'hover:opacity-80'
                       }`}
                       onClick={() => openPreview(index)}
                     >
@@ -351,8 +351,8 @@ const KamarDetailPage = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {kamar.jenis_kos && (
                 <div className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
-                    <Users className="w-5 h-5 text-indigo-600" />
+                  <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-3">
+                    <Users className="w-5 h-5 text-green-600" />
                   </div>
                   <p className="text-xs text-gray-500 mb-1 font-medium">Jenis Kos</p>
                   <p className="font-bold text-gray-900 text-sm">{kamar.jenis_kos}</p>
@@ -360,8 +360,8 @@ const KamarDetailPage = () => {
               )}
               {kamar.tipe_kos?.nama && (
                 <div className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
-                    <Building className="w-5 h-5 text-indigo-600" />
+                  <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-3">
+                    <Building className="w-5 h-5 text-green-600" />
                   </div>
                   <p className="text-xs text-gray-500 mb-1 font-medium">Tipe Kos</p>
                   <p className="font-bold text-gray-900 text-sm">{kamar.tipe_kos.nama}</p>
@@ -369,8 +369,8 @@ const KamarDetailPage = () => {
               )}
               {kamar.lantai && (
                 <div className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
-                    <Layers className="w-5 h-5 text-indigo-600" />
+                  <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-3">
+                    <Layers className="w-5 h-5 text-green-600" />
                   </div>
                   <p className="text-xs text-gray-500 mb-1 font-medium">Lantai</p>
                   <p className="font-bold text-gray-900 text-sm">Lantai {kamar.lantai}</p>
@@ -378,8 +378,8 @@ const KamarDetailPage = () => {
               )}
               {kamar.luas_kamar && (
                 <div className="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                  <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center mb-3">
-                    <Maximize2 className="w-5 h-5 text-indigo-600" />
+                  <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-3">
+                    <Maximize2 className="w-5 h-5 text-green-600" />
                   </div>
                   <p className="text-xs text-gray-500 mb-1 font-medium">Luas Kamar</p>
                   <p className="font-bold text-gray-900 text-sm">{kamar.luas_kamar} m²</p>
@@ -430,7 +430,7 @@ const KamarDetailPage = () => {
                 {(kosDetail?.link_maps || kamar.kos?.link_maps) && (
                   <button
                     onClick={() => window.open(kosDetail?.link_maps || kamar.kos?.link_maps, '_blank')}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
                   >
                     <MapPin className="w-5 h-5" />
                     Buka di Google Maps
@@ -444,7 +444,7 @@ const KamarDetailPage = () => {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg sticky top-24 overflow-hidden border border-gray-100">
               {/* Price Header */}
-              <div className="bg-gradient-to-br from-indigo-600 via-indigo-600 to-indigo-700 p-6 text-white">
+              <div className="bg-gradient-to-br from-green-600 via-green-600 to-green-700 p-6 text-white">
                 <p className="text-sm font-medium opacity-90 mb-2">Harga Sewa</p>
                 {displayPrice.price !== 'Harga belum tersedia' ? (
                   <div className="flex items-baseline gap-2">
@@ -499,14 +499,14 @@ const KamarDetailPage = () => {
                 {/* CTA Button */}
                 <button 
                   onClick={handleBookingClick}
-                  className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
+                  className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
                 >
                   Pesan Sekarang
                 </button>
 
                 {/* Info */}
-                <div className="bg-indigo-50 rounded-xl p-4 text-center border border-indigo-100">
-                  <p className="text-xs text-indigo-900 font-medium leading-relaxed">
+                <div className="bg-green-50 rounded-xl p-4 text-center border border-green-100">
+                  <p className="text-xs text-green-900 font-medium leading-relaxed">
                     Hubungi kami untuk informasi lebih lanjut dan ketersediaan kamar
                   </p>
                 </div>
