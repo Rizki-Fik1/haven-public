@@ -135,7 +135,7 @@ const PropertyListings = () => {
       <section className="w-full py-16 md:py-16 px-4 md:px-6 bg-white">
         <div className="max-w-7xl mx-auto flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4"></div>
             <p className="text-gray-600">Memuat properti...</p>
           </div>
         </div>

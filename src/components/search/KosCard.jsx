@@ -54,7 +54,7 @@ const KosCard = memo(({ kos, onClick }) => {
         {kos.link_maps && (
           <button
             onClick={handleMapClick}
-            className="absolute top-3 right-3 bg-white/90 hover:bg-white text-blue-600 text-xs font-semibold px-3 py-1.5 rounded-full shadow-md transition-colors flex items-center gap-1"
+            className="absolute top-3 right-3 bg-white/90 hover:bg-white text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full shadow-md transition-colors flex items-center gap-1"
           >
             <MapPin className="h-4 w-4" />
             Maps
@@ -75,7 +75,7 @@ const KosCard = memo(({ kos, onClick }) => {
             dangerouslySetInnerHTML={{ __html: kos.keterangan }}
           />
         )}
-        <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+        <button className="w-full bg-green-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
           Lihat Kamar
         </button>
       </div>
@@ -86,3 +86,4 @@ const KosCard = memo(({ kos, onClick }) => {
 KosCard.displayName = 'KosCard';
 
 export default KosCard;
+
