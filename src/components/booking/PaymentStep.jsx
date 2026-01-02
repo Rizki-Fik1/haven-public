@@ -242,7 +242,7 @@ const PaymentStep = ({
             <p className="text-sm font-medium opacity-90 mb-2">Total Pembayaran</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold">
-                Rp {bookingData?.price?.toLocaleString('id-ID') || '0'}
+                Rp {Number(bookingData?.price)?.toLocaleString('id-ID') || '0'}
               </span>
               <span className="text-base font-medium opacity-90">{bookingData?.priceLabel}</span>
             </div>

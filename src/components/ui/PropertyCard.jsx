@@ -109,12 +109,12 @@ const PropertyCard = ({ property }) => {
         <div className="text-center mb-4">
           {property.originalPrice && (
             <div className="text-xs text-gray-400 line-through mb-1">
-              IDR {property.originalPrice.toLocaleString('id-ID')}
+              IDR {Number(property.originalPrice).toLocaleString('id-ID')}
             </div>
           )}
           <div>
             <span className="text-xs text-gray-500">IDR </span>
-            <span className="text-lg font-bold text-gray-900">{property.price.toLocaleString('id-ID')}</span>
+            <span className="text-lg font-bold text-gray-900">{Number(property.price).toLocaleString('id-ID')}</span>
             <span className="text-xs text-gray-500">/bulan</span>
           </div>
         </div>

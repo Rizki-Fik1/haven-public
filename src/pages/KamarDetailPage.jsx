@@ -219,7 +219,7 @@ const KamarDetailPage = () => {
     }
 
     return {
-      price: targetPrice.price?.toLocaleString('id-ID'),
+      price: Number(targetPrice.price)?.toLocaleString('id-ID'),
       label: targetPrice.label,
     };
   };
@@ -465,31 +465,31 @@ const KamarDetailPage = () => {
                       {kamar.paket_harga.perharian_harga && (
                         <div className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0">
                           <span className="text-sm text-gray-600 font-medium">Per Hari</span>
-                          <span className="font-bold text-gray-900">Rp {kamar.paket_harga.perharian_harga.toLocaleString('id-ID')}</span>
+                          <span className="font-bold text-gray-900">Rp {Number(kamar.paket_harga.perharian_harga).toLocaleString('id-ID')}</span>
                         </div>
                       )}
                       {kamar.paket_harga.perbulan_harga && (
                         <div className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0">
                           <span className="text-sm text-gray-600 font-medium">Per Bulan</span>
-                          <span className="font-bold text-gray-900">Rp {kamar.paket_harga.perbulan_harga.toLocaleString('id-ID')}</span>
+                          <span className="font-bold text-gray-900">Rp {Number(kamar.paket_harga.perbulan_harga).toLocaleString('id-ID')}</span>
                         </div>
                       )}
                       {kamar.paket_harga.pertigabulan_harga && (
                         <div className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0">
                           <span className="text-sm text-gray-600 font-medium">Per 3 Bulan</span>
-                          <span className="font-bold text-gray-900">Rp {kamar.paket_harga.pertigabulan_harga.toLocaleString('id-ID')}</span>
+                          <span className="font-bold text-gray-900">Rp {Number(kamar.paket_harga.pertigabulan_harga).toLocaleString('id-ID')}</span>
                         </div>
                       )}
                       {kamar.paket_harga.perenambulan_harga && (
                         <div className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0">
                           <span className="text-sm text-gray-600 font-medium">Per 6 Bulan</span>
-                          <span className="font-bold text-gray-900">Rp {kamar.paket_harga.perenambulan_harga.toLocaleString('id-ID')}</span>
+                          <span className="font-bold text-gray-900">Rp {Number(kamar.paket_harga.perenambulan_harga).toLocaleString('id-ID')}</span>
                         </div>
                       )}
                       {kamar.paket_harga.pertahun_harga && (
                         <div className="flex justify-between items-center py-2.5 border-b border-gray-100 last:border-0">
                           <span className="text-sm text-gray-600 font-medium">Per Tahun</span>
-                          <span className="font-bold text-gray-900">Rp {kamar.paket_harga.pertahun_harga.toLocaleString('id-ID')}</span>
+                          <span className="font-bold text-gray-900">Rp {Number(kamar.paket_harga.pertahun_harga).toLocaleString('id-ID')}</span>
                         </div>
                       )}
                     </div>

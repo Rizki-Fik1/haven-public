@@ -260,7 +260,7 @@ const AccountPage = () => {
                       {trx.durasi ?? '-'}
                     </td>
                     <td className="px-6 py-4 text-right font-medium text-gray-900">
-                      Rp{Number(trx.harga).toLocaleString('id-ID')}
+                      Rp {Number(trx.harga).toLocaleString('id-ID')}
                     </td>
                     <td className="px-6 py-4 text-center">
                       <span

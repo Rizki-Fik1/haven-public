@@ -65,7 +65,7 @@ const RoomCard = memo(({ kamar, kosId, kosName, kosLocation }) => {
     }
 
     return {
-      price: targetPrice.price?.toLocaleString('id-ID'),
+      price: Number(targetPrice.price)?.toLocaleString('id-ID'),
       label: targetPrice.label,
     };
   };

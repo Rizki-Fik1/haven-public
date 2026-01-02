@@ -14,26 +14,33 @@ import {
   AlertCircle,
 } from 'lucide-react';
 
-// Toast notification component
-const Toast = ({ message, type = 'success', onClose }) => {
+// Snackbar notification component
+const Snackbar = ({ message, type = 'success', onClose }) => {
   useEffect(() => {
-    const timer = setTimeout(onClose, 3000);
+    const timer = setTimeout(onClose, 4000);
     return () => clearTimeout(timer);
   }, [onClose]);
 
   return (
-    <div className={`fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg ${
-      type === 'success' ? 'bg-green-500' : 'bg-red-500'
-    } text-white`}>
-      {type === 'success' ? (
-        <CheckCircle className="w-5 h-5" />
-      ) : (
-        <AlertCircle className="w-5 h-5" />
-      )}
-      <span>{message}</span>
-      <button onClick={onClose} className="ml-2">
-        <X className="w-4 h-4" />
-      </button>
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] animate-[slideUp_0.3s_ease-out]">
+      <div className={`flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl ${
+        type === 'success' 
+          ? 'bg-green-600' 
+          : 'bg-red-600'
+      } text-white min-w-[300px] max-w-[90vw]`}>
+        {type === 'success' ? (
+          <CheckCircle className="w-5 h-5 shrink-0" />
+        ) : (
+          <AlertCircle className="w-5 h-5 shrink-0" />
+        )}
+        <span className="font-medium text-sm flex-1">{message}</span>
+        <button 
+          onClick={onClose} 
+          className="ml-2 p-1 hover:bg-white/20 rounded-full transition-colors"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 };
@@ -250,7 +257,7 @@ const ProfilePage = memo(() => {
     return (
       <>
         {toast && (
-          <Toast
+          <Snackbar
             message={toast.message}
             type={toast.type}
             onClose={() => setToast(null)}
@@ -499,7 +506,7 @@ const ProfilePage = memo(() => {
   return (
     <>
       {toast && (
-        <Toast
+        <Snackbar
           message={toast.message}
           type={toast.type}
           onClose={() => setToast(null)}
