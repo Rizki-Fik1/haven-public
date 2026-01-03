@@ -115,7 +115,7 @@ const BookingPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-indigo-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-green-600" />
           <p className="text-gray-600">Memuat data booking...</p>
         </div>
       </div>
@@ -132,7 +132,7 @@ const BookingPage = () => {
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={handleBack}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             Kembali
@@ -173,7 +173,7 @@ const BookingPage = () => {
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
                       currentStep >= step.id
-                        ? 'bg-indigo-600 text-white'
+                        ? 'bg-green-600 text-white'
                         : 'bg-gray-200 text-gray-500'
                     }`}
                   >
@@ -190,7 +190,7 @@ const BookingPage = () => {
                 {index < STEPS.length - 1 && (
                   <div
                     className={`w-12 md:w-24 h-1 mx-4 rounded transition-colors ${
-                      currentStep > step.id ? 'bg-indigo-600' : 'bg-gray-200'
+                      currentStep > step.id ? 'bg-green-600' : 'bg-gray-200'
                     }`}
                   />
                 )}
